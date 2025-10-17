@@ -7,6 +7,9 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
+  headers: {
+    Authorization: API_ACCESS_TOKEN ? `Bearer ${API_ACCESS_TOKEN}` : undefined,
+  },
 });
 
 export const apiClient = async <T>({
@@ -40,6 +43,12 @@ apiInstance.interceptors.request.use((config) => {
             ...config.params,
             api_key: API_KEY_V3,
         };
+    } else {
+        console.error("CRITICAL: API_KEY_V3 is missing from environment during build!");
+        throw new Error("Missing API Key (Build Error)");
     }
+    
     return config;
+}, (error) => {
+    return Promise.reject(error);
 });
