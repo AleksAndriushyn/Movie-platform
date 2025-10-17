@@ -1,7 +1,6 @@
 import axios from "axios";
 import type { ApiRequestConfig } from "@/types/api";
 
-// const API_KEY_V3 = import.meta.env.VITE_TMDB_API_KEY_V3;
 const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -36,21 +35,3 @@ export const apiClient = async <T>({
     throw error;
   }
 };
-
-// apiInstance.interceptors.request.use((config) => {
-//     if (!API_KEY_V3) {
-//         console.error("CRITICAL: API_KEY_V3 is undefined. Check Vercel/Vite config.");
-//         throw new Error("Missing TMDB API Key.");
-//     }
-    
-//     config.params = {
-//         ...config.params,
-//         api_key: API_KEY_V3,
-//     };
-    
-//     delete config.headers.Authorization;
-    
-//     return config;
-// }, (error) => {
-//     return Promise.reject(error);
-// });
