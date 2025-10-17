@@ -1,14 +1,14 @@
 import axios from "axios";
 import type { ApiRequestConfig } from "@/types/api";
 
-const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
+const API_KEY_V3 = import.meta.env.VITE_TMDB_API_KEY_V3;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    Authorization: `Bearer ${API_ACCESS_TOKEN}`,
-  },
+  params: {
+    api_key: API_KEY_V3
+  }
 });
 
 export const apiClient = async <T>({
