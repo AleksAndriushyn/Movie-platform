@@ -1,14 +1,16 @@
 import axios from "axios";
 import type { ApiRequestConfig } from "@/types/api";
 
-const API_KEY_V3 = import.meta.env.TMDB_API_KEY_V3;
+const TMDB_AUTH_KEY = import.meta.env.VITE_TMDB_AUTH_KEY;
+
+const API_KEY_V3 = import.meta.env.VITE_TMDB_API_KEY_V3;
 const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    Authorization: API_ACCESS_TOKEN ? `Bearer ${API_ACCESS_TOKEN}` : undefined,
+    Authorization: `Bearer ${API_ACCESS_TOKEN}`,
   },
 });
 
@@ -38,15 +40,27 @@ export const apiClient = async <T>({
 };
 
 apiInstance.interceptors.request.use((config) => {
-    if (API_KEY_V3) {
-        config.params = {
-            ...config.params,
-            api_key: API_KEY_V3,
-        };
-    } else {
-        console.error("CRITICAL: API_KEY_V3 is missing from environment during build!");
-        throw new Error("Missing API Key (Build Error)");
+    // if (API_KEY_V3) {
+    //     config.params = {
+    //         ...config.params,
+    //         api_key: API_KEY_V3,
+    //     };
+    // } else {
+    //     console.error("CRITICAL: API_KEY_V3 is missing from environment during build!");
+    //     throw new Error("Missing API Key (Build Error)");
+    // }
+    
+    if (!TMDB_AUTH_KEY) {
+        console.error("CRITICAL: TMDB_AUTH_KEY is undefined. Check Vercel/Vite config.");
+        throw new Error("Missing TMDB API Key.");
     }
+    
+    config.params = {
+        ...config.params,
+        api_key: TMDB_AUTH_KEY,
+    };
+    
+    delete config.headers.Authorization;
     
     return config;
 }, (error) => {
