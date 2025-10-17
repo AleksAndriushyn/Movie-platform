@@ -35,7 +35,7 @@
 }
 
 .movie-poster-wrapper {
-  @apply relative;
+  @apply relative shrink-0;
 }
 
 .movie-page-rating-chip {
