@@ -10,10 +10,11 @@ export interface Movie {
   backdrop_path: string | null;
 }
 
-export interface PopularMoviesData {
+export interface MoviesData {
     movies: Movie[];
     totalPages: number;
     currentPage: number;
+    totalResults: number;
 }
 
-export type PopularMoviesResponse = PaginatedResponse<Movie>;
+export type MoviesResponse = PaginatedResponse<Movie>;

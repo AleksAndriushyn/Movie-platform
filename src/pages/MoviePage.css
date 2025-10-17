@@ -1,0 +1,43 @@
+.movie-hero-section {
+  @apply relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 h-[70vh] min-h-[500px] overflow-hidden;
+}
+
+.movie-backdrop {
+  @apply absolute inset-0 bg-cover bg-center transition duration-500;
+}
+
+.movie-gradient-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent;
+}
+
+.movie-details-container {
+  @apply relative -mt-64 md:-mt-48 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row pb-12;
+}
+
+.movie-poster {
+  @apply h-96 object-cover rounded-xl shadow-2xl border-4 border-gray-800;
+}
+
+.movie-title {
+  @apply text-5xl md:text-6xl font-extrabold text-white mb-6;
+}
+
+.movie-meta-item {
+  @apply text-lg text-gray-400;
+}
+
+.movie-trailer-button {
+  @apply bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full transition duration-150;
+}
+
+.movie-overview-title {
+  @apply text-2xl font-semibold mb-3 text-red-500;
+}
+
+.movie-poster-wrapper {
+  @apply relative;
+}
+
+.movie-page-rating-chip {
+  @apply text-base px-3 shadow-xl;
+}

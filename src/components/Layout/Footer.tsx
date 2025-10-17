@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="pt-6 text-center text-xs text-gray-500">
-          &copy; {new Date().getFullYear()} MovieVerse. All rights reserved. Built with ❤️ using React and Bun.
+          &copy; {new Date().getFullYear()} MovieVerse. All rights reserved. Built using React and Bun.
         </div>
         
       </div>

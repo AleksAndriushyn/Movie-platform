@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+@layer components {
+  @import '../components/Movies/MovieCard/MovieCard.css';
+  @import '../components/Pagination/Pagination.css';
+  @import '../components/Layout/Header.css';
+  @import '../pages/MoviePage.css';
+}

@@ -1,34 +1,79 @@
-import React from 'react';
+import useMovieGenres from '@/hooks/useMovieGenres';
+import debounce from '@/utils/debounce';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Header: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get('query') || '';
+
+  const [searchTerm, setSearchTerm] = useState(urlQuery);
+  const navigate = useNavigate();
+
+  const coreNavigate = useCallback(
+    (query: string) => {
+      if (query.trim()) {
+        navigate(`/search?query=${query}`, { replace: true });
+      }
+    },
+    [navigate]
+  );
+
+  const debouncedNavigate = useMemo(
+    () => debounce(coreNavigate, 1200),
+    [coreNavigate]
+  );
+
+  const { data: genres, isLoading: isLoadingGenres } = useMovieGenres();
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    setSearchTerm(query);
+    debouncedNavigate(query);
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-20 bg-gray-900/95 backdrop-blur-sm shadow-2xl border-b border-red-800/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          
+    <header className="main-header">
+      <div className="header-container">
+        <div className="flex justify-between items-center h-20 space-x-2">
+
           <div className="flex-shrink-0">
-            <a href="/" className="text-3xl font-extrabold text-white tracking-wider">
+            <a href="/" className="header-logo">
               <span className="text-red-600">Movie</span>Verse 🍿
             </a>
           </div>
 
-          <div className="hidden md:block">
-            <input
-              type="text"
-              placeholder="Search movies and series..."
-              className="w-80 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-150"
-            />
-          </div>
-
-          <nav className="flex items-center space-x-6">
-            <a href="/" className="text-gray-300 hover:text-red-500 font-medium transition duration-150">Trending</a>
-            <a href="/movies" className="text-gray-300 hover:text-red-500 transition duration-150">Movies</a>
-            <a href="/series" className="text-gray-300 hover:text-red-500 transition duration-150">Series</a>
-            
-            <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
-              Sign In
-            </button>
+          <nav>
+            {isLoadingGenres ? (
+              <span className="text-gray-400">Loading Genres...</span>
+            ) : (
+              <ul className="flex space-x-4 text-white">
+                {genres?.slice(0, 5).map((genre) => (
+                  <li key={genre.id}>
+                    <Link
+                      to={`/genre/${genre.id}`}
+                      className="hover:text-red-500 transition"
+                    >
+                      {genre.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </nav>
+
+          <div className="flex items-center space-x-4">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="search"
+                placeholder="Search movies and series..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="search-input"
+              />
+            </form>
+            <button className="auth-button">Sign in</button>
+          </div>
         </div>
       </div>
     </header>
