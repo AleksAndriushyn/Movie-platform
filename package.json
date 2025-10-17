@@ -4,11 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun x vite",
+    "dev": "vite",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build": "tsc && vite build",
-    "css:compile": "bunx tailwindcss -i ./src/styles/index.css -o ./src/styles/tailwind.css"
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.3",
