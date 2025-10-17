@@ -7,12 +7,6 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    Authorization: API_ACCESS_TOKEN ? `Bearer ${API_ACCESS_TOKEN}` : undefined,
-  },
-  params: {
-    api_key: API_KEY_V3
-  }
 });
 
 export const apiClient = async <T>({
@@ -39,3 +33,13 @@ export const apiClient = async <T>({
     throw error;
   }
 };
+
+apiInstance.interceptors.request.use((config) => {
+    if (API_KEY_V3) {
+        config.params = {
+            ...config.params,
+            api_key: API_KEY_V3,
+        };
+    }
+    return config;
+});
