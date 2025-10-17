@@ -11,7 +11,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     }
   },
-  define: {
-    'import.meta.env.VITE_TMDB_AUTH_KEY': JSON.stringify(VERCEL_AUTH_KEY),
-  },
+  // define: {
+  //   'import.meta.env.VITE_TMDB_AUTH_KEY': JSON.stringify(VERCEL_AUTH_KEY),
+  // },
 })
