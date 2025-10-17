@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { ApiRequestConfig } from "@/types/api";
 
-const API_KEY_V3 = import.meta.env.VITE_TMDB_API_KEY_V3;
+const API_KEY_V3 = import.meta.env.TMDB_API_KEY_V3;
 const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
