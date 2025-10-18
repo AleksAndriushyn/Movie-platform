@@ -7,13 +7,13 @@
 }
 
 .header-logo {
-  @apply text-3xl font-extrabold text-white tracking-wider;
+  @apply text-3xl font-extrabold tracking-wider;
 }
 
 .search-input {
-  @apply w-48 md:w-64 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-150;
+  @apply w-64 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-150;
 }
 
 .auth-button {
-  @apply px-4 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 transition;
+  @apply px-4 py-2 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700 transition w-21;
 }

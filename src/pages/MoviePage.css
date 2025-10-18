@@ -1,5 +1,5 @@
 .movie-hero-section {
-  @apply relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 h-[70vh] min-h-[500px] overflow-hidden;
+  @apply relative -mx-4 sm:-mx-6 lg:-mx-8 -mt-8 h-[50vh] min-h-[300px] md:h-[70vh] md:min-h-[500px] overflow-hidden;
 }
 
 .movie-backdrop {
@@ -11,7 +11,7 @@
 }
 
 .movie-details-container {
-  @apply relative -mt-64 md:-mt-48 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row pb-12;
+  @apply relative -mt-32 md:-mt-48 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row pb-12;
 }
 
 .movie-poster {
@@ -35,7 +35,7 @@
 }
 
 .movie-poster-wrapper {
-  @apply relative shrink-0;
+  @apply relative shrink-0 w-64 mx-auto md:mx-0;
 }
 
 .movie-page-rating-chip {

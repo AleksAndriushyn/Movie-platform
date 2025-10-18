@@ -1,6 +1,6 @@
 .movie-card {
   @apply bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col h-full 
-        transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-pointer;
+        transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl;
 }
 
 .movie-card-rating {

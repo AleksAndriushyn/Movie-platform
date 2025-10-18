@@ -6,3 +6,7 @@
   @import '../components/Layout/Header.css';
   @import '../pages/MoviePage.css';
 }
+
+button {
+  @apply cursor-pointer;
+}

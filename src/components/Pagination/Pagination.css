@@ -1,13 +1,13 @@
 .pagination-controls {
-    @apply items-center space-x-2 text-white font-medium lg:flex hidden;
+    @apply items-center space-x-2 text-white font-medium flex;
 }
 
 .pagination-button {
-    @apply px-4 py-2 rounded-lg transition duration-150 text-sm cursor-pointer;
+    @apply px-4 py-2 rounded-lg transition duration-150 text-sm;
 }
 
 .pagination-button-arrow {
-    @apply p-3 cursor-pointer rounded-full bg-gray-700 hover:bg-red-600 disabled:bg-gray-800 disabled:cursor-not-allowed transition duration-150;
+    @apply p-3 rounded-full bg-gray-700 hover:bg-red-600 disabled:bg-gray-800 disabled:cursor-not-allowed transition duration-150;
 }
 
 .pagination-active {

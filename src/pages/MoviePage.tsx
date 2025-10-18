@@ -68,7 +68,7 @@ const MoviePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="md:ml-10 pt-4 mt-48 md:mt-0">
+        <div className="md:ml-10 pt-4 mt-8 md:mt-0">
           <h1 className="movie-title">{movie.title}</h1>
 
           <div className="flex items-center space-x-4 mb-6">

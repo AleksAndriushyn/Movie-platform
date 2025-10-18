@@ -34,20 +34,22 @@ const Header: React.FC = () => {
 
   return (
     <header className="main-header">
-      <div className="header-container">
-        <div className="flex justify-between items-center h-20 space-x-2">
+      <div className="header-container flex justify-between gap-2 items-center h-20">
+        <div className="flex items-center md:gap-8">
+          <Link
+            to="/"
+            className="header-logo flex items-center space-x-2 shrink-0"
+          >
+            <span className="text-red-600">Movie</span>
+            <span>Verse</span>
+            <span className="text-xl">🍿</span>
+          </Link>
 
-          <div className="flex-shrink-0">
-            <a href="/" className="header-logo">
-              <span className="text-red-600">Movie</span>Verse 🍿
-            </a>
-          </div>
-
-          <nav>
+          <nav className="hidden lg:block">
             {isLoadingGenres ? (
               <span className="text-gray-400">Loading Genres...</span>
             ) : (
-              <ul className="flex space-x-4 text-white">
+              <ul className="flex gap-4 text-white">
                 {genres?.slice(0, 5).map((genre) => (
                   <li key={genre.id}>
                     <Link
@@ -61,19 +63,42 @@ const Header: React.FC = () => {
               </ul>
             )}
           </nav>
+        </div>
 
-          <div className="flex items-center space-x-4">
-            <form onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="search"
-                placeholder="Search movies and series..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="search-input"
-              />
-            </form>
-            <button className="auth-button">Sign in</button>
-          </div>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className='hidden sm:block'
+          >
+            <input
+              type="search"
+              placeholder="Search movies and series..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="search-input"
+            />
+          </form>
+          <button
+            className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition sm:hidden"
+            aria-label="Open search page"
+          >
+            <svg
+              className="w-5 h-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </button>
+
+          <button className="auth-button">Sign in</button>
         </div>
       </div>
     </header>
