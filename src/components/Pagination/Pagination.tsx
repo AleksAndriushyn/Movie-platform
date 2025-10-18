@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 interface PaginationProps {
@@ -16,9 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange = () => {},
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const urlPage = Number(searchParams.get('page')) || 1;
-
-  const [currentPage, setPage] = useState(urlPage);
+  const currentPage = Number(searchParams.get('page')) || 1;
 
   const pages = React.useMemo(() => {
     const pagesArray: (number | '...')[] = [];
@@ -64,17 +62,14 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
-
       const newSearchParams = new URLSearchParams(searchParams);
 
       if (newPage > 1) {
         newSearchParams.set('page', String(newPage));
-        setSearchParams(newSearchParams);
       } else {
         newSearchParams.delete('page');
-        setSearchParams(newSearchParams);
       }
+      setSearchParams(newSearchParams);
 
       onPageChange(newPage);
     }
