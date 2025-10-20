@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '@/components/Layout/Layout';
 import { useMovie } from '@/hooks/useMovie';
 import { getImageUrl } from '@/utils/image-helper';
 import Spinner from '@/components/UI/Spinner';
@@ -31,19 +30,15 @@ const MoviePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Layout>
-        <Spinner />
-      </Layout>
+      <Spinner />
     );
   }
 
   if (isError || !movie) {
     return (
-      <Layout>
-        <div className="text-center p-20 text-red-500 text-2xl">
-          Movie Not Found or API Error.
-        </div>
-      </Layout>
+      <div className="text-center p-20 text-red-500 text-2xl">
+        Movie Not Found or API Error.
+      </div>
     );
   }
 

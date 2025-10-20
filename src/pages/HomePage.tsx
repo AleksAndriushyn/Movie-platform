@@ -42,9 +42,7 @@ const HomePage: React.FC = () => {
         </div>
 
         {isLoading ? (
-          <div className="text-center p-20 text-gray-400 text-xl">
-            <Spinner />
-          </div>
+          <Spinner />
         ) : (
           <>
             <div
