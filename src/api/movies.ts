@@ -33,7 +33,7 @@ export const getMovie = async (movieId: number): Promise<Movie> => {
   const response = await apiClient<Movie>({
     url: `/movie/${movieId}`,
     method: 'GET',
-    params: { append_to_response: 'credits' },
+    params: { append_to_response: 'credits,videos' },
   });
   return response;
 };

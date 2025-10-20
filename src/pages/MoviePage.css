@@ -41,3 +41,7 @@
 .movie-page-rating-chip {
   @apply text-base px-3 shadow-xl;
 }
+
+.movie-cast {
+  @apply px-4 sm:px-6 lg:px-8 mt-12 border-t border-gray-700 pt-8;
+}

@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start space-y-6 md:space-y-0 pb-6 border-b border-gray-700/50">
           
           <div className="text-center md:text-left">
-            <h3 className="text-2xl font-extrabold text-red-600 mb-2">MovieVerse 🍿</h3>
+            <h3 className="text-2xl font-extrabold text-red-600 mb-2">MovieVerse</h3>
             <p className="text-sm text-gray-400 max-w-sm">
               Your guide to the world of movies and TV series. Data provided by The Movie Database (TMDB).
             </p>

@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         <div className="flex justify-between gap-4 items-center mb-6 border-b border-red-800/50 pb-4">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white shrink-0">
-            🔥 Trending Now
+            Trending Now
           </h1>
 
           <div className='hidden lg:block'>

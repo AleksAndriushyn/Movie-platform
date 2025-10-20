@@ -1,0 +1,3 @@
+.cast-card {
+    @apply flex-shrink-0 w-36 text-center transform transition duration-300 hover:scale-102 hover:shadow-2xl;
+}

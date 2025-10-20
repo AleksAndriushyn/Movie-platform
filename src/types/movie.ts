@@ -11,6 +11,9 @@ export interface Movie {
   runtime: number | null;
   genres: Genre[];
   credits?: Credits;
+  videos?: {
+    results: Video[];
+  };
 }
 
 export interface MoviesData {
@@ -42,6 +45,14 @@ export interface CrewMember {
 export interface Credits {
   cast: CastMember[];
   crew: CrewMember[];
+}
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: 'YouTube' | string;
+  type: 'Trailer' | 'Teaser' | string;
 }
 
 export type MoviesResponse = PaginatedResponse<Movie>;

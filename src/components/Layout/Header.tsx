@@ -42,7 +42,6 @@ const Header: React.FC = () => {
           >
             <span className="text-red-600">Movie</span>
             <span>Verse</span>
-            <span className="text-xl">🍿</span>
           </Link>
 
           <nav className="hidden lg:block">

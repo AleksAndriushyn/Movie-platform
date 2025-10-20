@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
 import { useMovie } from '@/hooks/useMovie';
@@ -6,12 +6,24 @@ import { getImageUrl } from '@/utils/image-helper';
 import Spinner from '@/components/UI/Spinner';
 import clsx from 'clsx';
 import formatRuntime from '@/utils/format-runtime';
-import CastCard from '@/components/Cast/CastCard';
+import { CastCarousel } from '@/components/Cast/CastCarousel';
+import { TrailerModal } from '@/components/modals/TrailerModal/TrailerModal';
+import { VideoCarousel } from '@/components/videos/VideoCarousel';
 
 const MoviePage: React.FC = () => {
   const { movieId } = useParams<{ movieId: string }>();
   const id = Number(movieId);
   const { data: movie, isLoading, isError } = useMovie(id);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVideoKey, setSelectedVideoKey] = useState<string | null>(null);
+
+  const handleVideoClick = (key: string) => {
+    setSelectedVideoKey(key);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => setIsModalOpen(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,7 +66,15 @@ const MoviePage: React.FC = () => {
     (member) => member.department === 'Writing'
   );
 
-  const topCast = movie.credits?.cast.slice(0, 15);
+  const topCast = movie.credits?.cast.filter((member) => member.profile_path);
+
+  const trailer = movie?.videos?.results.find(
+    (video) => video.site === 'YouTube' && video.type === 'Trailer'
+  );
+
+  const availableVideos = movie?.videos?.results.filter(
+    (video) => video.site === 'YouTube'
+  ) || [];
 
   return (
     <div>
@@ -87,9 +107,7 @@ const MoviePage: React.FC = () => {
             <p className="movie-meta-item">
               {new Date(movie.release_date).getFullYear()}
             </p>
-            <span className="text-gray-500">•</span>
             <p className="movie-meta-item">{formatRuntime(movie.runtime)}</p>
-            <span className="text-gray-500">•</span>
             <div className="flex items-center gap-2 flex-wrap">
               {movie.genres.map((genre) => (
                 <span key={genre.id} className="text-sm bg-gray-700 px-2 py-1 rounded">
@@ -97,10 +115,6 @@ const MoviePage: React.FC = () => {
                 </span>
               ))}
             </div>
-          </div>
-
-          <div className="flex items-center space-x-4 mb-6">
-            <button className="movie-trailer-button">Watch Trailer</button>
           </div>
 
           <h2 className="movie-overview-title">Overview</h2>
@@ -128,16 +142,21 @@ const MoviePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-4 sm:px-6 lg:px-8 mt-12 border-t border-gray-700 pt-8">
-        <h2 className="text-3xl font-bold mb-6">Cast</h2>
-        <div className="flex overflow-x-auto space-x-6 pb-4
-          scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 hover:scrollbar-thumb-gray-500"
-        >
-          {topCast?.map((actor) => (
-            <CastCard key={actor.id} actor={actor} />
-          ))}
-        </div>
+      <div className="px-4 sm:px-6 lg:px-8 mt-2 border-t border-gray-700 pt-8">
+        <h2 className="text-3xl font-bold mb-6">Trailers & Teasers</h2>
+        <VideoCarousel videos={availableVideos} onVideoClick={handleVideoClick} />
       </div>
+
+      <div className="movie-cast">
+        <h2 className="text-3xl font-bold mb-6">Cast</h2>
+        {topCast && <CastCarousel cast={topCast} />}
+      </div>
+
+      <TrailerModal
+        isOpen={isModalOpen} 
+        onClose={closeModal} 
+        videoKey={trailer?.key} 
+      />
     </div>
   );
 };
