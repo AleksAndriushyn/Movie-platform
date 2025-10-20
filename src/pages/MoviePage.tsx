@@ -68,10 +68,6 @@ const MoviePage: React.FC = () => {
 
   const topCast = movie.credits?.cast.filter((member) => member.profile_path);
 
-  const trailer = movie?.videos?.results.find(
-    (video) => video.site === 'YouTube' && video.type === 'Trailer'
-  );
-
   const availableVideos = movie?.videos?.results.filter(
     (video) => video.site === 'YouTube'
   ) || [];
@@ -153,9 +149,9 @@ const MoviePage: React.FC = () => {
       </div>
 
       <TrailerModal
-        isOpen={isModalOpen} 
-        onClose={closeModal} 
-        videoKey={trailer?.key} 
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        videoKey={selectedVideoKey}
       />
     </div>
   );

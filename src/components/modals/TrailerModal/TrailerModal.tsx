@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 interface TrailerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  videoKey?: string;
+  videoKey?: string | null;
 }
 
 export const TrailerModal: React.FC<TrailerModalProps> = ({ isOpen, onClose, videoKey }) => {
