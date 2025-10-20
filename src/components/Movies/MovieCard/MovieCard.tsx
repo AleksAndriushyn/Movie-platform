@@ -19,8 +19,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     'bg-red-600': movie.vote_average < 6,
   });
 
-  if (!posterUrl) return null;
-
   return (
     <Link to={`/movie/${movie.id}`}>
       <div className="movie-card">

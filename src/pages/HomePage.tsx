@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
   const { data, isLoading, isError, isFetching } = useMovies({ page: urlPage });
 
-  const movies = data?.movies || [];
+  const movies = data?.movies.filter((movie) => movie.poster_path) || [];
   const apiTotalPages = data?.totalPages || 1;
   const totalPages = Math.min(apiTotalPages, TMDB_MAX_PAGES);
 
