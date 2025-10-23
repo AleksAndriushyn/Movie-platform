@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useMovie } from '@/hooks/useMovie';
+import { useMovie } from '@/hooks/useMovies';
 import { getImageUrl } from '@/utils/image-helper';
 import Spinner from '@/components/UI/Spinner';
 import clsx from 'clsx';

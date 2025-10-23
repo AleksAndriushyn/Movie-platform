@@ -3,8 +3,7 @@ import type { Movie } from '@/types/movie';
 import { getImageUrl, getPosterSrcSet } from '@/utils/image-helper';
 import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-
-interface MovieCardProps {
+type MovieCardProps = {
   movie: Movie;
 }
 

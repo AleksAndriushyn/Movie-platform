@@ -1,6 +1,6 @@
 import type { Video } from '@/types/movie';
 
-interface VideoThumbnailProps {
+type VideoThumbnailProps = {
   video: Video;
   onClick: () => void;
 }

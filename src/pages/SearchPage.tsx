@@ -46,7 +46,7 @@ const SearchPage: React.FC = () => {
     content = (
       <>
         <div className={isFetching ? 'opacity-50 transition' : 'transition'}>
-          <MovieGrid data={movies} />
+          <MovieGrid movies={movies} />
         </div>
 
         {totalPages > 1 && (

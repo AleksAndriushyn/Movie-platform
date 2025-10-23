@@ -1,6 +1,5 @@
-import type { PaginatedResponse } from '@/types/api';
 import { apiClient } from './AxiosInstance';
-import type { Movie, MoviesData, MoviesResponse } from '@/types/movie';
+import type { Genre, Movie, MoviesResponse } from '@/types/movie';
 
 export const MOVIE_KEYS = {
   popular: ['movies', 'popular'],
@@ -9,12 +8,7 @@ export const MOVIE_KEYS = {
   genres: ['genres'],
 };
 
-export interface Genre {
-  id: number;
-  name: string;
-}
-
-interface GenreListResponse {
+type GenreListResponse = {
   genres: Genre[];
 }
 
@@ -41,12 +35,8 @@ export const getMovie = async (movieId: number): Promise<Movie> => {
 export const searchMovies = async (
   query: string,
   page: number = 1
-): Promise<MoviesData> => {
-  if (!query.trim()) {
-    return { movies: [], currentPage: 1, totalPages: 1, totalResults: 0 };
-  }
-
-  const response = await apiClient<PaginatedResponse<Movie>>({
+): Promise<MoviesResponse> => {
+  const response = await apiClient<MoviesResponse>({
     url: `/search/movie`,
     method: 'GET',
     params: {
@@ -55,12 +45,7 @@ export const searchMovies = async (
     },
   });
 
-  return {
-    movies: response.results as Movie[],
-    currentPage: response.page,
-    totalPages: response.total_pages,
-    totalResults: response.total_results,
-  };
+  return response;
 };
 
 export const fetchMovieGenres = async (): Promise<Genre[]> => {

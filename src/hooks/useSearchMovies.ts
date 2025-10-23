@@ -1,5 +1,6 @@
 
 import { MOVIE_KEYS, searchMovies } from '@/api/movies';
+import type { Movie, MoviesData } from '@/types/movie';
 import { useQuery } from '@tanstack/react-query';
 
 export const useSearchMovies = (query: string, page: number) => {
@@ -12,5 +13,11 @@ export const useSearchMovies = (query: string, page: number) => {
     enabled: !!finalQuery,
     staleTime: 1000 * 60 * 5,
     placeholderData: (previousData) => previousData,
+    select: (data): MoviesData => ({
+      movies: data.results.filter((movie: Movie) => movie.poster_path).slice(0, 20),
+      totalPages: data.total_pages,
+      currentPage: data.page,
+      totalResults: data.total_results,
+    }),
   });
 };

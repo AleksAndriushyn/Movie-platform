@@ -3,7 +3,7 @@ import type { CastMember } from '@/types/movie'
 import CastCard from './CastCard';
 import useEmblaCarousel from 'embla-carousel-react';
 
-interface CastCarouselProps {
+type CastCarouselProps = {
   cast: CastMember[];
 }
 

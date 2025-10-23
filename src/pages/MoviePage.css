@@ -35,7 +35,7 @@
 }
 
 .movie-poster-wrapper {
-  @apply relative shrink-0 w-64 mx-auto md:mx-0;
+  @apply shrink-0 w-64 mx-auto md:mx-0;
 }
 
 .movie-page-rating-chip {

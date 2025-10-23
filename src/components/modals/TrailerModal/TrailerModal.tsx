@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-interface TrailerModalProps {
+type TrailerModalProps = {
   isOpen: boolean;
   onClose: () => void;
   videoKey?: string | null;

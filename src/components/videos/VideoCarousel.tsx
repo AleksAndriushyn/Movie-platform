@@ -3,7 +3,7 @@ import type { Video } from '@/types/movie';
 import { VideoThumbnail } from './VideoThumbnail';
 import useEmblaCarousel from 'embla-carousel-react';
 
-interface VideoCarouselProps {
+type VideoCarouselProps = {
   videos: Video[];
   onVideoClick: (key: string) => void;
 }

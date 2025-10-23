@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
   const { data, isLoading, isError, isFetching } = useMovies({ page: urlPage });
 
-  const movies = data?.movies.filter((movie) => movie.poster_path) || [];
+  const movies = data?.movies || [];
   const apiTotalPages = data?.totalPages || 1;
   const totalPages = Math.min(apiTotalPages, TMDB_MAX_PAGES);
 
@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
             <div
               className={isFetching ? 'opacity-50 transition' : 'transition'}
             >
-              <MovieGrid data={movies} />
+              <MovieGrid movies={movies} />
             </div>
 
             <div className="flex justify-center mt-12">

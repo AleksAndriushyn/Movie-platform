@@ -8,7 +8,7 @@ export const useMovies = (params: { page: number }) => {
     queryFn: () => getAllMovies(params),
 
     select: (data): MoviesData => ({
-      movies: data.results,
+      movies: data.results.filter((movie) => movie.poster_path),
       totalPages: data.total_pages,
       currentPage: data.page,
       totalResults: data.total_results,

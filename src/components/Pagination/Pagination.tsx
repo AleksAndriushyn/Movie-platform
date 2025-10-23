@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-interface PaginationProps {
+type PaginationProps = {
   totalPages: number;
   isFetching: boolean;
   onPageChange?: (page: number) => void;
