@@ -98,7 +98,7 @@ const Search: React.FC = () => {
 			</button>
 
 			<SearchModal isOpen={isOpen} onClose={closePopup}>
-				<div className="rounded-2xl bg-gray-800 text-center align-middle">
+				<div className="rounded-2xl bg-gray-800 text-center align-middle w-full">
 					<div className="p-4 sm:hidden">
 						<SearchInput
 							ref={searchInputRef}

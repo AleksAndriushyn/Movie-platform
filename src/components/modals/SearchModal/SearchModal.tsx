@@ -24,10 +24,7 @@ const SearchModal: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
 
 	return (
 		<Transition appear show={isOpen} as={Fragment}>
-			<div
-				className="fixed inset-0 flex mx-auto items-start justify-center
-					p-4 sm:absolute sm:p-0 sm:top-full sm:left-0 sm:mt-2 max-w-[300px] sm:max-w-full"
-			>
+			<div className="search-modal" onClick={(e) => e.stopPropagation()}>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"
@@ -37,7 +34,7 @@ const SearchModal: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
 					leaveFrom="opacity-100 scale-100"
 					leaveTo="opacity-0 scale-95"
 				>
-					<div onClick={(e) => e.stopPropagation()}>{children}</div>
+					{children}
 				</Transition.Child>
 			</div>
 		</Transition>
