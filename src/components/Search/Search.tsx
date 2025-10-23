@@ -34,7 +34,7 @@ const Search: React.FC = () => {
 
 	useEffect(() => {
 		if (isOpen && window.innerWidth < 640) {
-			setTimeout(() => searchInputRef.current?.focus(), 100);
+			setTimeout(() => searchInputRef.current?.focus(), 200);
 		}
 	}, [isOpen]);
 
