@@ -5,25 +5,32 @@ import SearchInput from "./SearchInput";
 import SearchModal from "../modals/SearchModal/SearchModal";
 import { SearchResultItem } from "./SearchItem";
 import type { Movie } from "@/types/movie";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 const Search: React.FC = () => {
 	const navigate = useNavigate();
 
 	const [isOpen, setIsOpen] = useState(false);
 	const searchInputRef = useRef<HTMLInputElement>(null);
-	const containerRef = useRef<HTMLDivElement>(null);
 
-	const { searchTerm, setSearchTerm, searchResults, isLoading } =
-		useSearchDebounce();
+	const {
+		searchTerm,
+		setSearchTerm,
+		searchResults,
+		isLoading,
+		setSearchResults,
+		debouncedTerm,
+	} = useSearchDebounce();
+
+	const containerRef = useClickOutside(() => closePopup());
 
 	useEffect(() => {
-		if (searchResults.length > 0 && searchTerm.trim()) {
+		if (debouncedTerm.trim()) {
 			openPopup();
+		} else {
+			setSearchResults([]);
 		}
-		if (!searchTerm.trim()) {
-			closePopup();
-		}
-	}, [searchResults.length, searchTerm]);
+	}, [searchResults.length, debouncedTerm, setSearchResults]);
 
 	useEffect(() => {
 		if (isOpen && window.innerWidth < 640) {
@@ -37,6 +44,7 @@ const Search: React.FC = () => {
 
 	const openPopup = () => {
 		setIsOpen(true);
+		searchInputRef.current?.focus();
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -52,48 +60,45 @@ const Search: React.FC = () => {
 		setSearchTerm(value);
 	};
 
-	const handleClick = () => {
-		if (searchTerm.trim() && searchResults.length > 0) {
+	const handleFocus = () => {
+		if (searchTerm.trim()) {
 			openPopup();
 		}
 	};
 
-	const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-		if (!e.currentTarget.contains(e.relatedTarget)) {
-			closePopup();
-		}
-	};
-
 	return (
-		<div ref={containerRef} onBlur={handleBlur} className="relative">
+		<div ref={containerRef} className="relative">
 			<div className="hidden sm:block">
 				<SearchInput
 					value={searchTerm}
 					onChange={handleInputChange}
-					onFocus={handleClick}
+					onFocus={handleFocus}
 					onSubmit={handleSubmit}
 				/>
 			</div>
 			<button
 				onClick={openPopup}
 				className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition sm:hidden"
-				aria-label="Open search">
+				aria-label="Open search"
+			>
 				<svg
 					className="w-5 h-5 text-gray-400"
 					fill="none"
 					stroke="currentColor"
 					viewBox="0 0 24 24"
-					xmlns="http://www.w3.org/2000/svg">
+					xmlns="http://www.w3.org/2000/svg"
+				>
 					<path
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						strokeWidth="2"
-						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					></path>
 				</svg>
 			</button>
 
 			<SearchModal isOpen={isOpen} onClose={closePopup}>
-				<div className="rounded-2xl bg-gray-800 text-left align-middle">
+				<div className="rounded-2xl bg-gray-800 text-center align-middle">
 					<div className="p-4 sm:hidden">
 						<SearchInput
 							ref={searchInputRef}
@@ -102,90 +107,32 @@ const Search: React.FC = () => {
 							onSubmit={handleSubmit}
 						/>
 					</div>
-					<div className="p-4 pt-0 sm:pt-4 max-h-[70vh] overflow-y-scroll">
-						{isLoading && <p className="text-gray-400">Searching...</p>}
-						
-						{!isLoading && !searchResults?.length && searchTerm.trim() && (
-							<p className="text-gray-400">No results found.</p>
-						)}
+					{debouncedTerm.trim() && (
+						<div className="p-4 pt-0 sm:pt-4 max-h-[70vh] overflow-y-auto text-left">
+							{isLoading && <p className="text-gray-400">Searching...</p>}
 
-						{!isLoading && searchResults?.length > 0 && (
-							<ul>
-								{searchResults.map((movie: Movie) => (
-									<SearchResultItem
-										key={movie.id}
-										movie={movie}
-										onClick={closePopup}
-									/>
-								))}
-							</ul>
-						)}
-					</div>
+							{!isLoading && !searchResults?.length && debouncedTerm.trim() && (
+								<p className="text-gray-400">
+									No results found for "{debouncedTerm}". Try a different search
+									term.
+								</p>
+							)}
+
+							{!isLoading && searchResults?.length > 0 && (
+								<ul>
+									{searchResults.map((movie: Movie) => (
+										<SearchResultItem
+											key={movie.id}
+											movie={movie}
+											onClick={closePopup}
+										/>
+									))}
+								</ul>
+							)}
+						</div>
+					)}
 				</div>
 			</SearchModal>
-
-			{/* <Transition appear show={isOpen} as={Fragment}>
-				<Dialog
-					as="div"
-					className="relative z-30"
-					onClose={closePopup}
-					initialFocus={searchInputRef}>
-					<Transition.Child
-						as={Fragment}
-						enter="ease-out duration-300"
-						enterFrom="opacity-0"
-						enterTo="opacity-100"
-						leave="ease-in duration-200"
-						leaveFrom="opacity-100"
-						leaveTo="opacity-0">
-						<div className="fixed inset-0 bg-black/50 sm:hidden" />
-					</Transition.Child>
-
-					<div className="fixed inset-0 sm:top-0 sm:right-4">
-						<div className="flex min-h-full items-start justify-center sm:justify-end">
-							<Transition.Child
-								as={Fragment}
-								enter="ease-out duration-300"
-								enterFrom="opacity-0 scale-95"
-								enterTo="opacity-100 scale-100"
-								leave="ease-in duration-200"
-								leaveFrom="opacity-100 scale-100"
-								leaveTo="opacity-0 scale-95">
-								<Dialog.Panel className="w-full max-w-xs transform rounded-2xl bg-gray-800 text-left align-middle shadow-xl transition-all mt-4 sm:mt-[4.5rem]">
-									<div className="p-4 sm:hidden">
-										<SearchInput
-											ref={searchInputRef}
-											value={searchTerm}
-											onChange={handleInputChange}
-											onSubmit={handleSubmit}
-										/>
-									</div>
-
-									<div className="p-4 pt-0 sm:pt-4 max-h-[70vh] overflow-y-auto">
-										{isLoading && <p className="text-gray-400">Searching...</p>}
-										{!isLoading && searchResults?.length > 0 && (
-											<ul>
-												{searchResults.map((movie: Movie) => (
-													<SearchResultItem
-														key={movie.id}
-														movie={movie}
-														onClick={closePopup}
-													/>
-												))}
-											</ul>
-										)}
-										{!isLoading &&
-											!searchResults?.length &&
-											searchTerm.trim() && (
-												<p className="text-gray-400">No results found.</p>
-											)}
-									</div>
-								</Dialog.Panel>
-							</Transition.Child>
-						</div>
-					</div>
-				</Dialog>
-			</Transition> */}
 		</div>
 	);
 };

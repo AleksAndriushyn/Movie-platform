@@ -4,6 +4,8 @@ import type { ApiRequestConfig } from "@/types/api";
 const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
+export const TMDB_MAX_PAGES = 500;
+
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {

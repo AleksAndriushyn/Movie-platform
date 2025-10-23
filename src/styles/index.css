@@ -3,13 +3,23 @@
 @config "../../tailwind.config.ts";
 
 @layer components {
-  @import '../components/Movies/MovieCard/MovieCard.css';
-  @import '../components/Pagination/Pagination.css';
-  @import '../components/Layout/Header.css';
-  @import '../pages/MoviePage.css';
-  @import '../components/Cast/CastCard.css';
+	@import "./MovieCard.css";
+	@import "./Pagination.css";
+	@import "./Header.css";
+	@import "./MoviePage.css";
+	@import "./CastCard.css";
 }
 
 button {
-  @apply cursor-pointer;
+	@apply cursor-pointer;
+}
+
+body {
+	::-webkit-scrollbar {
+		@apply w-2 h-2;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply bg-gray-600 rounded-full;
+	}
 }

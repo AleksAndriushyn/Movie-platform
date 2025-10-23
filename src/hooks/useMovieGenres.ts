@@ -1,4 +1,5 @@
-import { type Genre, MOVIE_KEYS, fetchMovieGenres } from '@/api/movies';
+import { MOVIE_KEYS, fetchMovieGenres } from '@/api/movies';
+import type { Genre } from '@/types/movie';
 import { useQuery } from '@tanstack/react-query';
 
 export const useMovieGenres = () => {

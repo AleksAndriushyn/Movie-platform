@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchMovies } from "./useSearchMovies";
+import { useSearchMovies } from "./useMovies";
 import { useSearchParams } from "react-router-dom";
 import type { Movie } from "@/types/movie";
 
@@ -19,10 +19,6 @@ export const useSearchDebounce = () => {
 			setDebouncedTerm(searchTerm);
 		}, 500);
 
-		if (!searchTerm.trim()) {
-			setSearchResults([]);
-		}
-
 		return () => {
 			clearTimeout(timerId);
 		};
@@ -37,5 +33,7 @@ export const useSearchDebounce = () => {
 		setSearchTerm,
 		searchResults,
 		isLoading,
-	};
+		setSearchResults,
+		debouncedTerm,
+  };
 };

@@ -1,3 +1,4 @@
+import type { PaginatedResponse } from '@/types/api';
 import { apiClient } from './AxiosInstance';
 import type { Genre, Movie, MoviesResponse } from '@/types/movie';
 
@@ -55,4 +56,19 @@ export const fetchMovieGenres = async (): Promise<Genre[]> => {
   });
 
   return response.genres;
+};
+
+export const getMoviesByGenre = async (
+  genreId: number,
+  page: number = 1
+): Promise<PaginatedResponse<Movie>> => {
+  const response = await apiClient<PaginatedResponse<Movie>>({
+    url: '/discover/movie',
+    method: 'GET',
+    params: {
+      with_genres: genreId,
+      page: page,
+    },
+  });
+  return response;
 };

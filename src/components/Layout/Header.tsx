@@ -40,7 +40,7 @@ const Header: React.FC = () => {
 
         <div className="flex items-center gap-2 sm:gap-4">
           <Search/>
-          <button className="auth-button">Sign in</button>
+          {/* <button className="auth-button">Sign in</button> */}
         </div>
       </div>
     </header>
