@@ -11,7 +11,7 @@
 }
 
 .search-input {
-  @apply w-64 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none
+  @apply sm:w-95 w-64 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none
     focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-150;
 }
 

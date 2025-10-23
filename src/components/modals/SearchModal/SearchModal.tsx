@@ -26,7 +26,7 @@ const SearchModal: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
 		<Transition appear show={isOpen} as={Fragment}>
 			<div
 				className="fixed inset-0 flex mx-auto items-start justify-center
-					p-4 sm:absolute sm:p-0 sm:top-full sm:left-0 sm:w-full sm:mt-2 max-w-[300px]"
+					p-4 sm:absolute sm:p-0 sm:top-full sm:left-0 sm:mt-2 max-w-[300px] sm:max-w-full"
 			>
 				<Transition.Child
 					as={Fragment}
