@@ -10,7 +10,7 @@ type MovieGridProps = {
 const MovieGrid: React.FC<MovieGridProps> = ({ movies }) => {
 	const isMobile = useMediaQuery("(max-width: 640px)");
 
-	const priorityCount = isMobile ? 4 : 10;
+	const priorityCount = 10;
 
 	return (
 		<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
