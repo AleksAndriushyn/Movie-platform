@@ -73,6 +73,7 @@ const MoviePage: React.FC = () => {
                         src={backdropUrl}
                         alt={`${movie.title} backdrop`}
                         className="w-full h-full object-cover"
+						loading="eager"
                         fetchPriority="high"
                     />
                 </picture>
