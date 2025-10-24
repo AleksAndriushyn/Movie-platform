@@ -59,7 +59,7 @@ const MoviePage: React.FC = () => {
 		(member) => member.department === "Writing"
 	);
 
-	const topCast = movie.credits?.cast.filter((member) => member.profile_path);
+	const topCast = movie.credits?.cast.filter((member) => member.profile_path) || [];
 
 	const availableVideos = movie?.videos?.results || [];
 
@@ -144,7 +144,7 @@ const MoviePage: React.FC = () => {
 
 			<div className="movie-cast">
 				<h2 className="text-3xl font-bold mb-6">Cast</h2>
-				{topCast && <CastCarousel cast={topCast} />}
+				{<CastCarousel cast={topCast} />}
 			</div>
 
 			<TrailerModal

@@ -15,7 +15,9 @@ export const CastCarousel: React.FC<CastCarouselProps> = ({ cast }) => {
     dragFree: true
   });
 
-  if (!cast || cast.length === 0) return null;
+  if (!cast || cast.length === 0) {
+    return <p className="text-gray-400">No cast available for this movie.</p>;
+  }
 
   return (
     <div className="relative">
