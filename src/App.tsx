@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import MoviePage from "./pages/MoviePage";
 import SearchPage from "./pages/SearchPage";
 import GenrePage from "./pages/GenrePage";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App: React.FC = () => {
 					<Route path="/search" element={<SearchPage />} />
 					<Route path="/genre/:genreId" element={<GenrePage />} />
 				</Routes>
+				<SpeedInsights/>
 			</Layout>
 		</QueryClientProvider>
 	);
