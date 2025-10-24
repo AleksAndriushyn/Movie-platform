@@ -3,7 +3,7 @@
 }
 
 .movie-backdrop {
-  @apply absolute inset-0 bg-cover bg-center transition duration-500;
+  @apply absolute inset-0;
 }
 
 .movie-gradient-overlay {

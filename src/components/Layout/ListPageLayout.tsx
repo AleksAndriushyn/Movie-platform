@@ -3,7 +3,7 @@ import type { Movie } from "@/types/movie";
 import MovieGrid from "../Movies/MovieGrid/MovieGrid";
 import Pagination from "../Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
-import MovieCardSkeleton from "../Movies/MovieCard/MovieCardSkeleton";
+import MovieCardSkeleton from "../UI/MovieCardSkeleton";
 
 interface ListPageLayoutProps {
 	title: string;

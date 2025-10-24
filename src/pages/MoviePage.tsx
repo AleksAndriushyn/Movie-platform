@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMovie } from "@/hooks/useMovies";
-import { getImageUrl } from "@/utils/image-helper";
-import Spinner from "@/components/UI/Spinner";
+import { getBackdropSrcSet, getImageUrl } from "@/utils/image-helper";
 import clsx from "clsx";
 import formatRuntime from "@/utils/format-runtime";
 import { CastCarousel } from "@/components/Cast/CastCarousel";
 import { TrailerModal } from "@/components/modals/TrailerModal/TrailerModal";
 import { VideoCarousel } from "@/components/videos/VideoCarousel";
+import { MoviePageSkeleton } from "@/components/UI/MoviePageSkeleton";
 
 const MoviePage: React.FC = () => {
 	const { movieId } = useParams<{ movieId: string }>();
@@ -29,7 +29,7 @@ const MoviePage: React.FC = () => {
 	}, [movie]);
 
 	if (isLoading) {
-		return <Spinner />;
+		return <MoviePageSkeleton />
 	}
 
 	if (isError || !movie) {
@@ -40,8 +40,9 @@ const MoviePage: React.FC = () => {
 		);
 	}
 
-	const backdropUrl = getImageUrl(movie.backdrop_path, "original");
+	const backdropUrl = getImageUrl(movie.backdrop_path, "w1280");
 	const posterUrl = getImageUrl(movie.poster_path, "w500");
+	const backdropSrcSet = getBackdropSrcSet(movie.backdrop_path);
 
 	const rating = movie.vote_average.toFixed(1);
 	const ratingColor =
@@ -66,16 +67,28 @@ const MoviePage: React.FC = () => {
 	return (
 		<div>
 			<div className="movie-hero-section">
-				<div
-					className="movie-backdrop"
-					style={{ backgroundImage: `url(${backdropUrl})` }}
-				/>
+				<picture className="movie-backdrop">
+                    <source srcSet={backdropSrcSet} sizes="100vw" />
+                    <img
+                        src={backdropUrl}
+                        alt={`${movie.title} backdrop`}
+                        className="w-full h-full object-cover"
+                        fetchPriority="high"
+                    />
+                </picture>
+
 				<div className="movie-gradient-overlay" />
 			</div>
 
 			<div className="movie-details-container">
 				<div className="movie-poster-wrapper">
-					<img src={posterUrl} alt={movie.title} className="movie-poster" />
+					<img
+						src={posterUrl}
+						alt={movie.title}
+						className="movie-poster"
+						loading="eager"
+						fetchPriority="high"
+					/>
 
 					<div
 						className={clsx(

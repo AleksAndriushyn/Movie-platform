@@ -19,3 +19,13 @@ export function getPosterSrcSet(path: string | null | undefined): string {
     return `${getImageUrl(path, size)} ${width}w`;
   }).join(', ');
 }
+
+const BACKDROP_SIZES = ['w300', 'w780', 'w1280'];
+
+export const getBackdropSrcSet = (path: string | null): string => {
+  if (!path) return '';
+  return BACKDROP_SIZES.map(size => {
+    const width = size.substring(1);
+    return `${getImageUrl(path, size)} ${width}w`;
+  }).join(', ');
+};
