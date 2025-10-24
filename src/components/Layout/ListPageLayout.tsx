@@ -4,6 +4,7 @@ import MovieGrid from "../Movies/MovieGrid/MovieGrid";
 import Pagination from "../Pagination/Pagination";
 import Spinner from "../UI/Spinner";
 import { useSearchParams } from "react-router-dom";
+import MovieCardSkeleton from "../Movies/MovieCard/MovieCardSkeleton";
 
 interface ListPageLayoutProps {
 	title: string;
@@ -30,7 +31,13 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 	let content: React.ReactNode;
 
 	if (isLoading) {
-		content = <Spinner />;
+		content = (
+			<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+				{Array.from({ length: 20 }).map((_, index) => (
+					<MovieCardSkeleton key={index} />
+				))}
+			</div>
+		);
 	} else if (isError) {
 		content = (
 			<div className="text-center p-20 text-red-500">
