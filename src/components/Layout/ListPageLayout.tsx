@@ -2,7 +2,6 @@ import React from "react";
 import type { Movie } from "@/types/movie";
 import MovieGrid from "../Movies/MovieGrid/MovieGrid";
 import Pagination from "../Pagination/Pagination";
-import Spinner from "../UI/Spinner";
 import { useSearchParams } from "react-router-dom";
 import MovieCardSkeleton from "../Movies/MovieCard/MovieCardSkeleton";
 
