@@ -15,7 +15,7 @@ export function getPosterSrcSet(path: string | null | undefined): string {
   }
 
   return POSTER_SIZES.map(size => {
-    const width = size.substring(1);
+    const width = size;
     return `${getImageUrl(path, size)} ${width}w`;
   }).join(', ');
 }
