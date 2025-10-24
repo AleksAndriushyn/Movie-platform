@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import MoviePage from "./pages/MoviePage";
 import SearchPage from "./pages/SearchPage";
 import GenrePage from "./pages/GenrePage";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const queryClient = new QueryClient();
 
