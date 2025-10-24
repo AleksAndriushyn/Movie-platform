@@ -1,10 +1,6 @@
 export const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/';
 
-const POSTER_SIZES = {
-  SMALL: 'w185',
-  MEDIUM: 'w342',
-  LARGE: 'w500',
-};
+const POSTER_SIZES = ['92', '154', '185', '342', '500', '780'];
 
 export function getImageUrl(path: string | null | undefined, size: string = 'w500'): string {
   if (!path) {
@@ -18,11 +14,8 @@ export function getPosterSrcSet(path: string | null | undefined): string {
     return '';
   }
 
-  const srcsetParts = [
-    `${getImageUrl(path, POSTER_SIZES.SMALL)} ${185}w`,
-    `${getImageUrl(path, POSTER_SIZES.MEDIUM)} ${342}w`,
-    `${getImageUrl(path, POSTER_SIZES.LARGE)} ${500}w`,
-  ];
-
-  return srcsetParts.join(', ');
+  return POSTER_SIZES.map(size => {
+    const width = size.substring(1);
+    return `${getImageUrl(path, size)} ${width}w`;
+  }).join(', ');
 }

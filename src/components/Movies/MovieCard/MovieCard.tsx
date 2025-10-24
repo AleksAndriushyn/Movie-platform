@@ -9,7 +9,7 @@ type MovieCardProps = {
 };
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, eagerLoad = false }) => {
-	const posterUrl = getImageUrl(movie.poster_path, "w342");
+	const posterUrl = getImageUrl(movie.poster_path, "w500");
 	const srcSet = getPosterSrcSet(movie.poster_path);
 
 	const rating = movie.vote_average.toFixed(1);
