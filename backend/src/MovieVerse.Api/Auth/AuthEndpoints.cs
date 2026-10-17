@@ -2,6 +2,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.EntityFrameworkCore;
+using MovieVerse.Api.Data;
 
 namespace MovieVerse.Api.Auth;
 
@@ -35,6 +37,18 @@ public static class AuthEndpoints
             .RequireAuthorization()
             .WithTags("Auth")
             .WithName("GetCurrentUser");
+
+        // Self-service erasure: removes the user and, by cascade, everything they saved
+        app.MapDelete("/api/me", async (HttpContext http, ClaimsPrincipal user, AppDbContext db, CancellationToken ct) =>
+        {
+            var userId = user.GetUserId();
+            await db.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(ct);
+            await http.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Results.NoContent();
+        })
+            .RequireAuthorization()
+            .WithTags("Auth")
+            .WithName("DeleteCurrentUser");
 
         return app;
     }

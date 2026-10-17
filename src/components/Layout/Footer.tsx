@@ -33,6 +33,7 @@ const Footer: React.FC = () => {
             
             <div className="flex flex-col space-y-2">
               <h4 className="font-semibold text-white mb-1 uppercase">Info</h4>
+              <Link to="/privacy" className={FOOTER_LINK_CLASS}>Privacy Policy</Link>
               <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className={FOOTER_LINK_CLASS}>TMDB</a>
               <a href="https://developer.themoviedb.org/docs" target="_blank" rel="noopener noreferrer" className={FOOTER_LINK_CLASS}>API (TMDB)</a>
             </div>

@@ -54,8 +54,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(_connection));
 
             // Authenticate requests carrying X-Test-User; challenges still go to the real cookie scheme
-            services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.Scheme, null);
-            services.PostConfigure<AuthenticationOptions>(options => options.DefaultAuthenticateScheme = TestAuthHandler.Scheme);
+            services.AddAuthentication().AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, null);
+            services.PostConfigure<AuthenticationOptions>(options => options.DefaultAuthenticateScheme = TestAuthHandler.SchemeName);
         });
     }
 
@@ -99,7 +99,7 @@ public sealed class TestAuthHandler(
     ILoggerFactory logger,
     UrlEncoder encoder) : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
-    public const string Scheme = "Test";
+    public const string SchemeName = "Test";
     public const string Header = "X-Test-User";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -116,7 +116,7 @@ public sealed class TestAuthHandler(
                 new Claim(ClaimTypes.Email, "test@example.com"),
                 new Claim(AuthClaims.Picture, "https://example.com/avatar.png"),
             ],
-            Scheme);
-        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(identity), Scheme)));
+            SchemeName);
+        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(identity), SchemeName)));
     }
 }

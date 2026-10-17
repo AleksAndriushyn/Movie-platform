@@ -1,15 +1,29 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { getLoginUrl } from "@/api/me";
-import { useCurrentUser, useLogout } from "@/hooks/useAuth";
+import { useCurrentUser, useDeleteAccount, useLogout } from "@/hooks/useAuth";
 
 const MENU_ITEM_CLASS = "block w-full text-left px-4 py-2 text-sm text-gray-200 data-[focus]:bg-gray-700";
 
 const AuthControls: React.FC = () => {
 	const location = useLocation();
 	const { data: user, isLoading } = useCurrentUser();
+	const navigate = useNavigate();
 	const logout = useLogout();
+	const deleteAccount = useDeleteAccount();
+
+	const handleDeleteAccount = () => {
+		const confirmed = window.confirm(
+			"Delete your MovieVerse account and all saved movies? This can't be undone."
+		);
+		if (!confirmed) return;
+
+		deleteAccount.mutate(undefined, {
+			onSuccess: () => navigate("/"),
+			onError: () => window.alert("Couldn't delete your account. Please try again."),
+		});
+	};
 
 	if (isLoading) {
 		// keeps the header from shifting while the session loads
@@ -51,6 +65,17 @@ const AuthControls: React.FC = () => {
 				<MenuItem>
 					<button type="button" onClick={() => logout.mutate()} className={MENU_ITEM_CLASS}>
 						Sign out
+					</button>
+				</MenuItem>
+				<div className="my-1 border-t border-gray-700" />
+				<MenuItem>
+					<button
+						type="button"
+						onClick={handleDeleteAccount}
+						disabled={deleteAccount.isPending}
+						className={`${MENU_ITEM_CLASS} text-red-400!`}
+					>
+						Delete account
 					</button>
 				</MenuItem>
 			</MenuItems>

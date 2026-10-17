@@ -7,6 +7,7 @@ import SearchPage from "./pages/SearchPage";
 import GenrePage from "./pages/GenrePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ListPage from "./pages/ListPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { ApiError } from "./api/AxiosInstance";
 
@@ -43,6 +44,7 @@ const App: React.FC = () => {
 						path="/watchlist"
 						element={<ListPage list="watchlist" title="Watchlist" emptyMessage="Your watchlist is empty. Tap the bookmark on any movie to save it for later." />}
 					/>
+					<Route path="/privacy" element={<PrivacyPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
 				<SpeedInsights/>
