@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Movie } from '@/types/movie';
 import { getImageUrl } from '@/utils/image-helper';
+import getReleaseYear from '@/utils/release-year';
 
 type SearchResultItemProps = {
   movie: Movie;
@@ -9,6 +10,7 @@ type SearchResultItemProps = {
 
 export const SearchResultItem: React.FC<SearchResultItemProps> = ({ movie, onClick }) => {
   const posterUrl = getImageUrl(movie.poster_path, 'w92');
+  const releaseYear = getReleaseYear(movie.release_date);
 
   return (
 		<Link
@@ -19,10 +21,8 @@ export const SearchResultItem: React.FC<SearchResultItemProps> = ({ movie, onCli
 			<img src={posterUrl} alt={movie.title} className="w-12 h-auto rounded" />
 			<div className="ml-3">
 				<p className="text-white font-semibold">{movie.title}</p>
-				{movie.release_date && (
-					<p className="text-sm text-gray-400">
-						{new Date(movie.release_date).getFullYear()}
-					</p>
+				{releaseYear && (
+					<p className="text-sm text-gray-400">{releaseYear}</p>
 				)}
 			</div>
 		</Link>

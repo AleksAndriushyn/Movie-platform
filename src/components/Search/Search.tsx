@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import { useSearchDebounce } from "@/hooks/useSearchDebounce";
 import SearchInput from "./SearchInput";
 import SearchModal from "../modals/SearchModal/SearchModal";
@@ -18,19 +18,11 @@ const Search: React.FC = () => {
 		setSearchTerm,
 		searchResults,
 		isLoading,
-		setSearchResults,
+		isError,
 		debouncedTerm,
 	} = useSearchDebounce();
 
 	const containerRef = useClickOutside(() => closePopup());
-
-	useEffect(() => {
-		if (debouncedTerm.trim()) {
-			openPopup();
-		} else {
-			setSearchResults([]);
-		}
-	}, [searchResults.length, debouncedTerm, setSearchResults]);
 
 	useEffect(() => {
 		if (isOpen && window.innerWidth < 640) {
@@ -49,8 +41,12 @@ const Search: React.FC = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (searchTerm.trim()) {
-			navigate(`/search?query=${searchTerm}`);
+		const query = searchTerm.trim();
+		if (query) {
+			navigate({
+				pathname: "/search",
+				search: createSearchParams({ query }).toString(),
+			});
 			closePopup();
 		}
 	};
@@ -58,6 +54,10 @@ const Search: React.FC = () => {
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
 		setSearchTerm(value);
+		// open only in response to typing, so the popup doesn't pop up over /search on load or after submit
+		if (value.trim()) {
+			setIsOpen(true);
+		}
 	};
 
 	const handleFocus = () => {
@@ -111,7 +111,13 @@ const Search: React.FC = () => {
 						<div className="p-4 pt-0 sm:pt-4 max-h-[70vh] overflow-y-auto text-left">
 							{isLoading && <p className="text-gray-400">Searching...</p>}
 
-							{!isLoading && !searchResults?.length && debouncedTerm.trim() && (
+							{!isLoading && isError && (
+								<p className="text-red-500">
+									Search is unavailable right now. Please try again later.
+								</p>
+							)}
+
+							{!isLoading && !isError && !searchResults?.length && (
 								<p className="text-gray-400">
 									No results found for "{debouncedTerm}". Try a different search
 									term.

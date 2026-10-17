@@ -2,10 +2,11 @@ import React from "react";
 import { useMovies } from "@/hooks/useMovies";
 import { useSearchParams } from "react-router-dom";
 import { ListPageLayout } from "@/components/Layout/ListPageLayout";
+import getPageParam from "@/utils/page-param";
 
 const HomePage: React.FC = () => {
 	const [searchParams] = useSearchParams();
-	const urlPage = Number(searchParams.get("page")) || 1;
+	const urlPage = getPageParam(searchParams);
 
 	const { data, isLoading, isError, isFetching } = useMovies({ page: urlPage });
 
@@ -14,7 +15,7 @@ const HomePage: React.FC = () => {
 
 	return (
 		<ListPageLayout
-			title="Trending Now"
+			title="Popular Movies"
 			movies={movies}
 			totalPages={totalPages}
 			isLoading={isLoading}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchMovies } from "./useMovies";
 import { useSearchParams } from "react-router-dom";
-import type { Movie } from "@/types/movie";
 
 export const useSearchDebounce = () => {
 	const [searchParams] = useSearchParams();
@@ -10,9 +9,7 @@ export const useSearchDebounce = () => {
 	const [searchTerm, setSearchTerm] = useState(urlQuery);
 	const [debouncedTerm, setDebouncedTerm] = useState("");
 
-	const { data, isLoading } = useSearchMovies(debouncedTerm, 1);
-
-	const [searchResults, setSearchResults] = useState<Movie[]>([]);
+	const { data, isLoading, isError } = useSearchMovies(debouncedTerm, 1);
 
 	useEffect(() => {
 		const timerId = setTimeout(() => {
@@ -24,16 +21,15 @@ export const useSearchDebounce = () => {
 		};
 	}, [searchTerm]);
 
-	useEffect(() => {
-		setSearchResults(data?.movies || []);
-	}, [data?.movies]);
+	// placeholderData keeps the previous results around, so drop them once the term is cleared
+	const searchResults = debouncedTerm.trim() ? data?.movies ?? [] : [];
 
 	return {
 		searchTerm,
 		setSearchTerm,
 		searchResults,
 		isLoading,
-		setSearchResults,
+		isError,
 		debouncedTerm,
   };
 };

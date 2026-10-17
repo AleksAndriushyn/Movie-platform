@@ -6,6 +6,16 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 export const TMDB_MAX_PAGES = 500;
 
+export class ApiError extends Error {
+  readonly status?: number;
+
+  constructor(message: string, status?: number) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -32,7 +42,10 @@ export const apiClient = async <T>({
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw new Error(error.response.data?.status_message || error.message);
+      throw new ApiError(
+        error.response.data?.status_message || error.message,
+        error.response.status
+      );
     }
     throw error;
   }

@@ -20,7 +20,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 					{...props}
 					ref={ref}
 					type="search"
-					placeholder="Search movies and series..."
+					placeholder="Search movies..."
 					className="search-input"
 				/>
 			</form>

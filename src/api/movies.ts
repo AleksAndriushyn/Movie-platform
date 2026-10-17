@@ -6,6 +6,7 @@ export const MOVIE_KEYS = {
   popular: ['movies', 'popular'],
   details: (id: number) => ['movie', 'details', id],
   search: (query: string, page: number) => ['movies', 'search', query, page],
+  byGenre: (genreId: number, page: number) => ['movies', 'byGenre', genreId, page],
   genres: ['genres'],
 };
 

@@ -3,6 +3,7 @@ import type { Movie } from "@/types/movie";
 import { getImageUrl, getPosterSrcSet } from "@/utils/image-helper";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
+import getReleaseYear from "@/utils/release-year";
 type MovieCardProps = {
 	movie: Movie;
 	eagerLoad?: boolean;
@@ -46,9 +47,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, eagerLoad = false }) => {
 					</h3>
 
 					<p className="text-sm text-gray-400">
-						{movie.release_date
-							? new Date(movie.release_date).getFullYear()
-							: "N/A"}
+						{getReleaseYear(movie.release_date) ?? "N/A"}
 					</p>
 
 					<p className="text-xs text-gray-500 mt-2 line-clamp-2">
