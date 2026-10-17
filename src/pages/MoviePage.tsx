@@ -11,6 +11,7 @@ import { MoviePageSkeleton } from "@/components/UI/MoviePageSkeleton";
 import { ApiError } from "@/api/AxiosInstance";
 import getReleaseYear from "@/utils/release-year";
 import NotFoundPage from "./NotFoundPage";
+import { ListToggleButtons } from "@/components/Lists/ListToggleButtons";
 
 const MoviePage: React.FC = () => {
 	const { movieId } = useParams<{ movieId: string }>();
@@ -140,6 +141,8 @@ const MoviePage: React.FC = () => {
 							))}
 						</div>
 					</div>
+
+					<ListToggleButtons movieId={movie.id} variant="labeled" className="flex-wrap mb-6" />
 
 					<h2 className="movie-overview-title">Overview</h2>
 					<p className="text-gray-300 leading-relaxed max-w-4xl">
