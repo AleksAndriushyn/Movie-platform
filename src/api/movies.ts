@@ -18,7 +18,7 @@ export const getAllMovies = async (params: {
   page: number;
 }): Promise<MoviesResponse> => {
   const response = await apiClient<MoviesResponse>({
-    url: '/movie/popular',
+    url: '/movies/popular',
     method: 'GET',
     params,
   });
@@ -27,9 +27,8 @@ export const getAllMovies = async (params: {
 
 export const getMovie = async (movieId: number): Promise<Movie> => {
   const response = await apiClient<Movie>({
-    url: `/movie/${movieId}`,
+    url: `/movies/${movieId}`,
     method: 'GET',
-    params: { append_to_response: 'credits,videos' },
   });
   return response;
 };
@@ -39,7 +38,7 @@ export const searchMovies = async (
   page: number = 1
 ): Promise<MoviesResponse> => {
   const response = await apiClient<MoviesResponse>({
-    url: `/search/movie`,
+    url: '/movies/search',
     method: 'GET',
     params: {
       query: query,
@@ -52,7 +51,7 @@ export const searchMovies = async (
 
 export const fetchMovieGenres = async (): Promise<Genre[]> => {
   const response = await apiClient<GenreListResponse>({
-    url: '/genre/movie/list',
+    url: '/genres',
     method: 'GET',
   });
 
@@ -64,10 +63,9 @@ export const getMoviesByGenre = async (
   page: number = 1
 ): Promise<PaginatedResponse<Movie>> => {
   const response = await apiClient<PaginatedResponse<Movie>>({
-    url: '/discover/movie',
+    url: `/genres/${genreId}/movies`,
     method: 'GET',
     params: {
-      with_genres: genreId,
       page: page,
     },
   });
