@@ -10,6 +10,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
 
     public DbSet<ListItem> ListItems => Set<ListItem>();
 
+    public DbSet<Rating> Ratings => Set<Rating>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(user =>
@@ -30,6 +32,19 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             item.Property(i => i.PosterPath).HasMaxLength(200);
             item.Property(i => i.ReleaseDate).HasMaxLength(10);
             item.Property(i => i.Overview).HasMaxLength(MaxOverviewLength);
+        });
+
+        modelBuilder.Entity<Rating>(rating =>
+        {
+            rating.HasKey(r => new { r.UserId, r.MovieId });
+            rating.HasIndex(r => new { r.UserId, r.RatedAtUtc });
+            rating.HasOne<User>().WithMany().HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Cascade);
+            rating.ToTable(t => t.HasCheckConstraint(
+                "CK_Ratings_Score", $"[Score] BETWEEN {Rating.MinScore} AND {Rating.MaxScore}"));
+            rating.Property(r => r.Title).HasMaxLength(500);
+            rating.Property(r => r.PosterPath).HasMaxLength(200);
+            rating.Property(r => r.ReleaseDate).HasMaxLength(10);
+            rating.Property(r => r.Overview).HasMaxLength(MaxOverviewLength);
         });
     }
 }

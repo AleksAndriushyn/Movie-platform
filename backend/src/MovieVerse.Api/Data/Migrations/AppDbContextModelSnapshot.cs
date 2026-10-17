@@ -63,6 +63,50 @@ namespace MovieVerse.Api.Data.Migrations
                     b.ToTable("ListItems");
                 });
 
+            modelBuilder.Entity("MovieVerse.Api.Data.Rating", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Overview")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("PosterPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("RatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReleaseDate")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<byte>("Score")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<double>("VoteAverage")
+                        .HasColumnType("float");
+
+                    b.HasKey("UserId", "MovieId");
+
+                    b.HasIndex("UserId", "RatedAtUtc");
+
+                    b.ToTable("Ratings", t =>
+                        {
+                            t.HasCheckConstraint("CK_Ratings_Score", "[Score] BETWEEN 1 AND 10");
+                        });
+                });
+
             modelBuilder.Entity("MovieVerse.Api.Data.User", b =>
                 {
                     b.Property<int>("Id")
@@ -103,6 +147,15 @@ namespace MovieVerse.Api.Data.Migrations
                 });
 
             modelBuilder.Entity("MovieVerse.Api.Data.ListItem", b =>
+                {
+                    b.HasOne("MovieVerse.Api.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MovieVerse.Api.Data.Rating", b =>
                 {
                     b.HasOne("MovieVerse.Api.Data.User", null)
                         .WithMany()

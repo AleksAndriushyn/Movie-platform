@@ -5,10 +5,10 @@ import { getLoginUrl } from "@/api/me";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { useMovieList } from "@/hooks/useLists";
 import getPageParam from "@/utils/page-param";
-import type { MovieListName } from "@/types/user";
+import type { UserListName } from "@/types/user";
 
 type ListPageProps = {
-	list: MovieListName;
+	list: UserListName;
 	title: string;
 	emptyMessage: string;
 };

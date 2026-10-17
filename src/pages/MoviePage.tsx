@@ -12,6 +12,7 @@ import { ApiError } from "@/api/AxiosInstance";
 import getReleaseYear from "@/utils/release-year";
 import NotFoundPage from "./NotFoundPage";
 import { ListToggleButtons } from "@/components/Lists/ListToggleButtons";
+import { RatingStars } from "@/components/Ratings/RatingStars";
 
 const MoviePage: React.FC = () => {
 	const { movieId } = useParams<{ movieId: string }>();
@@ -142,7 +143,8 @@ const MoviePage: React.FC = () => {
 						</div>
 					</div>
 
-					<ListToggleButtons movieId={movie.id} variant="labeled" className="flex-wrap mb-6" />
+					<ListToggleButtons movieId={movie.id} variant="labeled" className="flex-wrap mb-4" />
+					<RatingStars movieId={movie.id} className="mb-6" />
 
 					<h2 className="movie-overview-title">Overview</h2>
 					<p className="text-gray-300 leading-relaxed max-w-4xl">

@@ -44,6 +44,10 @@ const App: React.FC = () => {
 						path="/watchlist"
 						element={<ListPage list="watchlist" title="Watchlist" emptyMessage="Your watchlist is empty. Tap the bookmark on any movie to save it for later." />}
 					/>
+					<Route
+						path="/ratings"
+						element={<ListPage list="ratings" title="Your Ratings" emptyMessage="You haven't rated any movies yet. Open a movie and pick from 1 to 10 stars." />}
+					/>
 					<Route path="/privacy" element={<PrivacyPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>

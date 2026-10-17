@@ -11,6 +11,10 @@
   @apply absolute top-2 left-2 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md;
 }
 
+.movie-card-user-rating {
+  @apply absolute bottom-2 left-2 bg-gray-900/80 backdrop-blur-sm text-yellow-400 text-xs font-bold px-2 py-1 rounded-full shadow-md;
+}
+
 .movie-card-title {
   @apply text-lg font-semibold text-white truncate mb-1 hover:text-red-500 transition duration-150;
 }
