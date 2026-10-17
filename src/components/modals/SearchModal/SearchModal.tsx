@@ -24,7 +24,17 @@ const SearchModal: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
 
 	return (
 		<Transition appear show={isOpen} as={Fragment}>
-			<div className="search-modal" onClick={(e) => e.stopPropagation()}>
+			<div
+				className="search-modal"
+				onClick={(e) => {
+					e.stopPropagation();
+					// the full-screen overlay on mobile sits inside the click-outside container,
+					// so close on taps on the overlay itself (phones have no Escape key)
+					if (e.target === e.currentTarget) {
+						onClose();
+					}
+				}}
+			>
 				<Transition.Child
 					as={Fragment}
 					enter="ease-out duration-300"

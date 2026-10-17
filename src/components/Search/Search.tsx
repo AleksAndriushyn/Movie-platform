@@ -18,6 +18,7 @@ const Search: React.FC = () => {
 		setSearchTerm,
 		searchResults,
 		isLoading,
+		isError,
 		debouncedTerm,
 	} = useSearchDebounce();
 
@@ -110,7 +111,13 @@ const Search: React.FC = () => {
 						<div className="p-4 pt-0 sm:pt-4 max-h-[70vh] overflow-y-auto text-left">
 							{isLoading && <p className="text-gray-400">Searching...</p>}
 
-							{!isLoading && !searchResults?.length && debouncedTerm.trim() && (
+							{!isLoading && isError && (
+								<p className="text-red-500">
+									Search is unavailable right now. Please try again later.
+								</p>
+							)}
+
+							{!isLoading && !isError && !searchResults?.length && (
 								<p className="text-gray-400">
 									No results found for "{debouncedTerm}". Try a different search
 									term.

@@ -9,7 +9,7 @@ export const useSearchDebounce = () => {
 	const [searchTerm, setSearchTerm] = useState(urlQuery);
 	const [debouncedTerm, setDebouncedTerm] = useState("");
 
-	const { data, isLoading } = useSearchMovies(debouncedTerm, 1);
+	const { data, isLoading, isError } = useSearchMovies(debouncedTerm, 1);
 
 	useEffect(() => {
 		const timerId = setTimeout(() => {
@@ -29,6 +29,7 @@ export const useSearchDebounce = () => {
 		setSearchTerm,
 		searchResults,
 		isLoading,
+		isError,
 		debouncedTerm,
   };
 };

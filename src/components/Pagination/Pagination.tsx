@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
+import getPageParam from '@/utils/page-param';
 
 type PaginationProps = {
   totalPages: number;
@@ -16,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
   onPageChange = () => {},
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const currentPage = getPageParam(searchParams);
 
   const pages = React.useMemo(() => {
     const pagesArray: (number | '...')[] = [];

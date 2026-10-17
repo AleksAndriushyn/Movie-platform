@@ -2,7 +2,6 @@ import React from "react";
 import type { Movie } from "@/types/movie";
 import MovieGrid from "../Movies/MovieGrid/MovieGrid";
 import Pagination from "../Pagination/Pagination";
-import { useSearchParams } from "react-router-dom";
 import MovieCardSkeleton from "../UI/MovieCardSkeleton";
 
 interface ListPageLayoutProps {
@@ -12,6 +11,7 @@ interface ListPageLayoutProps {
 	isLoading: boolean;
 	isFetching: boolean;
 	isError: boolean;
+	emptyMessage?: string;
 }
 
 export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
@@ -21,10 +21,8 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 	isLoading,
 	isFetching,
 	isError,
+	emptyMessage = "No movies found.",
 }) => {
-	const [searchParams] = useSearchParams();
-	const urlQuery = searchParams.get("query") || "";
-
 	let content: React.ReactNode;
 
 	if (isLoading) {
@@ -41,11 +39,9 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 				Error loading data. Please try again later.
 			</div>
 		);
-	} else if (movies.length === 0 && !isLoading && urlQuery) {
+	} else if (movies.length === 0) {
 		content = (
-			<div className="text-center p-20 text-gray-400">
-				No results found for "{urlQuery}". Try a different search term.
-			</div>
+			<div className="text-center p-20 text-gray-400">{emptyMessage}</div>
 		);
 	} else {
 		content = (
@@ -66,6 +62,7 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 
 	return (
 		<div className="container mx-auto px-4 py-8">
+			<title>{`${title} | MovieVerse`}</title>
 			<div className="flex justify-between gap-4 items-center mb-8 border-b border-gray-700 pb-4">
 				<h1 className="text-3xl sm:text-4xl font-bold text-white shrink-0">
 					{title}

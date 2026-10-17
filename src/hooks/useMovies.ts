@@ -7,6 +7,7 @@ export const useMovies = (params: { page: number }) => {
   return useQuery({
 		queryKey: [...MOVIE_KEYS.popular, params.page],
 		queryFn: () => getAllMovies(params),
+		placeholderData: (previousData) => previousData,
 
 		select: (data): MoviesData => ({
 			movies: data.results.filter((movie) => movie.poster_path),
@@ -47,8 +48,9 @@ export const useSearchMovies = (query: string, page: number) => {
 
 export const useMoviesByGenre = (genreId: number, page: number) => {
 	return useQuery({
-		queryKey: ["movies", "byGenre", genreId, page],
+		queryKey: MOVIE_KEYS.byGenre(genreId, page),
 		queryFn: () => getMoviesByGenre(genreId, page),
+		enabled: genreId > 0,
 		select: (data): MoviesData => ({
 			movies: data.results.filter((movie: Movie) => movie.poster_path),
 			totalPages: Math.min(data.total_pages, TMDB_MAX_PAGES),

@@ -8,11 +8,14 @@ import { CastCarousel } from "@/components/Cast/CastCarousel";
 import { TrailerModal } from "@/components/modals/TrailerModal/TrailerModal";
 import { VideoCarousel } from "@/components/videos/VideoCarousel";
 import { MoviePageSkeleton } from "@/components/UI/MoviePageSkeleton";
+import { ApiError } from "@/api/AxiosInstance";
+import getReleaseYear from "@/utils/release-year";
+import NotFoundPage from "./NotFoundPage";
 
 const MoviePage: React.FC = () => {
 	const { movieId } = useParams<{ movieId: string }>();
 	const id = Number(movieId);
-	const { data: movie, isLoading, isError } = useMovie(id);
+	const { data: movie, isLoading, error } = useMovie(id);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedVideoKey, setSelectedVideoKey] = useState<string | null>(null);
@@ -32,10 +35,15 @@ const MoviePage: React.FC = () => {
 		return <MoviePageSkeleton />
 	}
 
-	if (isError || !movie) {
+	// a non-numeric id never reaches the API, so treat it as not found too
+	if (!movie && (!error || (error instanceof ApiError && error.status === 404))) {
+		return <NotFoundPage />;
+	}
+
+	if (!movie) {
 		return (
 			<div className="text-center p-20 text-red-500 text-2xl">
-				Movie Not Found or API Error.
+				Couldn't load this movie. Please try again later.
 			</div>
 		);
 	}
@@ -43,6 +51,7 @@ const MoviePage: React.FC = () => {
 	const backdropUrl = getImageUrl(movie.backdrop_path, "w1280");
 	const posterUrl = getImageUrl(movie.poster_path, "w500");
 	const backdropSrcSet = getBackdropSrcSet(movie.backdrop_path);
+	const releaseYear = getReleaseYear(movie.release_date);
 
 	const rating = movie.vote_average.toFixed(1);
 	const ratingColor =
@@ -68,30 +77,39 @@ const MoviePage: React.FC = () => {
 
 	return (
 		<div>
+			<title>{`${movie.title} | MovieVerse`}</title>
 			<div className="movie-hero-section">
-				<picture className="movie-backdrop">
-                    <source srcSet={backdropSrcSet} sizes="100vw" />
-                    <img
-                        src={backdropUrl}
-                        alt={`${movie.title} backdrop`}
-                        className="w-full h-full object-cover"
-						loading="eager"
-                        fetchPriority="high"
-                    />
-                </picture>
+				{movie.backdrop_path && (
+					<picture className="movie-backdrop">
+						<source srcSet={backdropSrcSet} sizes="100vw" />
+						<img
+							src={backdropUrl}
+							alt={`${movie.title} backdrop`}
+							className="w-full h-full object-cover"
+							loading="eager"
+							fetchPriority="high"
+						/>
+					</picture>
+				)}
 
 				<div className="movie-gradient-overlay" />
 			</div>
 
 			<div className="movie-details-container">
 				<div className="movie-poster-wrapper">
-					<img
-						src={posterUrl}
-						alt={movie.title}
-						className="movie-poster"
-						loading="eager"
-						fetchPriority="high"
-					/>
+					{movie.poster_path ? (
+						<img
+							src={posterUrl}
+							alt={movie.title}
+							className="movie-poster"
+							loading="eager"
+							fetchPriority="high"
+						/>
+					) : (
+						<div className="movie-poster w-full flex items-center justify-center bg-gray-800 text-gray-500 text-center p-4">
+							No poster available
+						</div>
+					)}
 
 					<div
 						className={clsx(
@@ -107,10 +125,8 @@ const MoviePage: React.FC = () => {
 					<h1 className="movie-title">{movie.title}</h1>
 
 					<div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-6">
-						{movie.release_date && (
-							<p className="movie-meta-item">
-								{new Date(movie.release_date).getFullYear()}
-							</p>
+						{releaseYear && (
+							<p className="movie-meta-item">{releaseYear}</p>
 						)}
 						<p className="movie-meta-item">{formatRuntime(movie.runtime)}</p>
 						<div className="flex items-center gap-2 flex-wrap">
