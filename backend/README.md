@@ -2,7 +2,7 @@
 
 ASP.NET Core 10 API behind the MovieVerse frontend. It proxies the TMDB endpoints the site uses,
 so the TMDB token never reaches the browser, and keeps user accounts (Google sign-in) with their
-favorites and watchlist in Azure SQL.
+favorites, watchlist and ratings in Azure SQL.
 
 | Endpoint | TMDB call | Cached for |
 | --- | --- | --- |
@@ -20,9 +20,13 @@ Account endpoints use a cookie session (`mv_auth`, HttpOnly, SameSite=Lax):
 | `GET /api/auth/login?returnUrl=` | Redirects to Google; returns to `returnUrl` (same-site paths only) |
 | `POST /api/auth/logout` | Ends the session |
 | `GET /api/me` | Current user, or 401 |
-| `GET /api/me/lists` | Movie ids in `favorites` and `watchlist` |
+| `DELETE /api/me` | Deletes the account with all its lists and ratings, and ends the session |
+| `GET /api/me/lists` | Movie ids in `favorites` and `watchlist`, plus `ratings` as `{ "movieId": score }` |
 | `GET /api/me/lists/{list}?page=` | A list page in TMDB's paginated shape, newest first |
 | `PUT` / `DELETE /api/me/lists/{list}/{movieId}` | Add (idempotent, up to 1000 per list) / remove |
+| `GET /api/me/ratings?page=` | Rated movies in TMDB's paginated shape with `user_rating`, newest first |
+| `PUT /api/me/ratings/{movieId}` | Rate with body `{ "score": 1-10 }`; re-rating updates the score (up to 5000 ratings) |
+| `DELETE /api/me/ratings/{movieId}` | Clears the rating |
 
 Responses are TMDB's JSON unchanged; errors are [ProblemDetails](https://www.rfc-editor.org/rfc/rfc9457).
 `page` must be 1–500 and `query` at most 100 characters. Requests are rate limited to 120 per minute per client IP.
