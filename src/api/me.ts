@@ -25,6 +25,8 @@ export const getCurrentUser = async (): Promise<CurrentUser | null> => {
 
 export const logout = () => apiClient<void>({ url: '/auth/logout', method: 'POST' });
 
+export const deleteAccount = () => apiClient<void>({ url: '/me', method: 'DELETE' });
+
 export const getListMembership = () =>
   apiClient<ListMembership>({ url: '/me/lists', method: 'GET' });
 
