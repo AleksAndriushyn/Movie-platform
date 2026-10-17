@@ -18,13 +18,13 @@ The OpenAPI document is served at `/openapi/v1.json` in Development.
 
 ## Local development
 
-Requires the .NET 10 SDK. Store your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api) in user secrets once:
+Requires the .NET 10 SDK. From the repository root, store your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api) in user secrets once:
 
 ```bash
 dotnet user-secrets set "Tmdb:AccessToken" "<token>" --project backend/src/MovieVerse.Api
 ```
 
-Then, from the repository root, run the API (http://localhost:5080) and the frontend together:
+Then run the API (http://localhost:5080) and the frontend together:
 
 ```bash
 npm run dev:all
