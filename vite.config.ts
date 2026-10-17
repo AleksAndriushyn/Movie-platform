@@ -15,7 +15,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': API_DEV_URL,
+      // keep the browser's Host so the API builds the Google redirect URI on :5173, not :5080
+      '/api': { target: API_DEV_URL, changeOrigin: false },
     },
   },
 });

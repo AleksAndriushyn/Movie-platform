@@ -1,7 +1,8 @@
 # MovieVerse API
 
-ASP.NET Core 10 API behind the MovieVerse frontend. For now it proxies the TMDB endpoints
-the site uses, so the TMDB token never reaches the browser, and caches responses in memory.
+ASP.NET Core 10 API behind the MovieVerse frontend. It proxies the TMDB endpoints the site uses,
+so the TMDB token never reaches the browser, and keeps user accounts (Google sign-in) with their
+favorites and watchlist in Azure SQL.
 
 | Endpoint | TMDB call | Cached for |
 | --- | --- | --- |
@@ -12,16 +13,44 @@ the site uses, so the TMDB token never reaches the browser, and caches responses
 | `GET /api/genres/{id}/movies?page=` | `discover/movie?with_genres=` | 15 min |
 | `GET /health` | — | — |
 
+Account endpoints use a cookie session (`mv_auth`, HttpOnly, SameSite=Lax):
+
+| Endpoint | Description |
+| --- | --- |
+| `GET /api/auth/login?returnUrl=` | Redirects to Google; returns to `returnUrl` (same-site paths only) |
+| `POST /api/auth/logout` | Ends the session |
+| `GET /api/me` | Current user, or 401 |
+| `GET /api/me/lists` | Movie ids in `favorites` and `watchlist` |
+| `GET /api/me/lists/{list}?page=` | A list page in TMDB's paginated shape, newest first |
+| `PUT` / `DELETE /api/me/lists/{list}/{movieId}` | Add (idempotent, up to 1000 per list) / remove |
+
 Responses are TMDB's JSON unchanged; errors are [ProblemDetails](https://www.rfc-editor.org/rfc/rfc9457).
 `page` must be 1–500 and `query` at most 100 characters. Requests are rate limited to 120 per minute per client IP.
 The OpenAPI document is served at `/openapi/v1.json` in Development.
 
 ## Local development
 
-Requires the .NET 10 SDK. From the repository root, store your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api) in user secrets once:
+Requires the .NET 10 SDK and the Azure CLI. From the repository root, store your
+[TMDB API Read Access Token](https://www.themoviedb.org/settings/api) and the Google OAuth client in user secrets once:
 
 ```bash
 dotnet user-secrets set "Tmdb:AccessToken" "<token>" --project backend/src/MovieVerse.Api
+dotnet user-secrets set "Google:ClientId" "<client id>" --project backend/src/MovieVerse.Api
+dotnet user-secrets set "Google:ClientSecret" "<client secret>" --project backend/src/MovieVerse.Api
+```
+
+The development database is `movieverse-dev` on Azure SQL (see `appsettings.Development.json`). It uses
+Microsoft Entra sign-in, so there is no password: run `az login` as an account with access to the server,
+and allow your IP once (it changes when you switch networks):
+
+```bash
+az sql server firewall-rule create -g movieverse-rg -s movieverse-sql-d94a9b -n dev-machine --start-ip-address <ip> --end-ip-address <ip>
+```
+
+Migrations live in `Data/Migrations` and are applied on startup. To add one:
+
+```bash
+dotnet ef migrations add <Name> --project backend/src/MovieVerse.Api --output-dir Data/Migrations
 ```
 
 Then run the API (http://localhost:5080) and the frontend together:
@@ -30,12 +59,17 @@ Then run the API (http://localhost:5080) and the frontend together:
 npm run dev:all
 ```
 
-The Vite dev server proxies `/api` to the API. Run the tests with `dotnet test backend`.
+The Vite dev server proxies `/api` to the API. Run the tests with `dotnet test backend`; they use
+in-memory SQLite and a fake TMDB, so they need neither Azure nor network access.
 
 ## Deployment (Azure App Service, Free F1)
 
 1. Create a **Web App**: Publish *Code*, Runtime stack *.NET 10 (LTS)*, OS *Linux*, pricing plan *Free F1*.
-2. In the app's **Settings → Environment variables**, add `Tmdb__AccessToken` with the TMDB token.
+2. In the app's **Settings → Environment variables**, add `Tmdb__AccessToken`, `Google__ClientId`,
+   `Google__ClientSecret`, `App__PublicOrigin` (the site's URL, used for the Google redirect URI) and
+   `ConnectionStrings__Default` (Azure SQL with `Authentication=Active Directory Default`). Turn on the app's
+   system-assigned managed identity and create a database user for it
+   (`CREATE USER [<app name>] FROM EXTERNAL PROVIDER`, roles `db_datareader`, `db_datawriter`, `db_ddladmin`).
 3. In **Settings → Configuration**, turn on *SCM Basic Auth Publishing Credentials*, then download the
    publish profile from the app's **Overview** page.
 4. In the GitHub repository, add the secret `AZURE_WEBAPP_PUBLISH_PROFILE` (the publish profile file's contents)
@@ -44,4 +78,6 @@ The Vite dev server proxies `/api` to the API. Run the tests with `dotnet test b
 5. Point the frontend at the API: the `/api/:path*` rewrite in `vercel.json` forwards to the app's
    default domain (currently `movieverse-api-c0e3fe.azurewebsites.net`).
 
-The Free tier sleeps when idle, so the first request after a pause takes a few seconds.
+The Free tier sleeps when idle, so the first request after a pause takes a few seconds. The free
+serverless database pauses after an hour without queries and takes up to a minute to resume; only
+signed-in features touch it, and the API retries while it wakes up.

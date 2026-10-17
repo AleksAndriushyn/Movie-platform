@@ -2,6 +2,7 @@ import useMovieGenres from '@/hooks/useMovieGenres';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Search from '../Search/Search';
+import AuthControls from '../Auth/AuthControls';
 
 const Header: React.FC = () => {
   const { data: genres, isLoading: isLoadingGenres } = useMovieGenres();
@@ -40,7 +41,7 @@ const Header: React.FC = () => {
 
         <div className="flex items-center gap-2 sm:gap-4">
           <Search/>
-          {/* <button className="auth-button">Sign in</button> */}
+          <AuthControls />
         </div>
       </div>
     </header>

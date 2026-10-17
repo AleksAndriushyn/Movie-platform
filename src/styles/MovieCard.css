@@ -1,6 +1,10 @@
+.movie-card-wrapper {
+  @apply relative h-full transform transition duration-300 ease-in-out hover:scale-105;
+}
+
 .movie-card {
-  @apply bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col h-full 
-        transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl;
+  @apply bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col h-full
+        transition duration-300 ease-in-out hover:shadow-2xl;
 }
 
 .movie-card-rating {
