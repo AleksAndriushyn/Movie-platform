@@ -6,7 +6,7 @@ import { ListPageLayout } from "@/components/Layout/ListPageLayout";
 
 const GenrePage: React.FC = () => {
 	const { genreId } = useParams<{ genreId: string }>();
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams] = useSearchParams();
 
 	const id = Number(genreId);
 	const page = Number(searchParams.get("page")) || 1;
@@ -19,19 +19,14 @@ const GenrePage: React.FC = () => {
 
 	const genre = genres?.find((g) => g.id === id);
 
-	const handlePageChange = (newPage: number) => {
-		setSearchParams({ page: newPage.toString() });
-	};
-
 	return (
 		<ListPageLayout
-			title={`Movies in ${genre?.name}`}
+			title={genre ? `${genre.name} Movies` : "Movies"}
 			movies={movies}
 			totalPages={totalPages}
 			isLoading={isLoading}
 			isFetching={isFetching}
 			isError={isError}
-			handlePageChange={handlePageChange}
 		/>
 	);
 };

@@ -70,6 +70,7 @@ const Pagination: React.FC<PaginationProps> = ({
         newSearchParams.delete('page');
       }
       setSearchParams(newSearchParams);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       onPageChange(newPage);
     }

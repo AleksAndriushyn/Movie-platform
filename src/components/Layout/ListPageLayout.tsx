@@ -12,7 +12,6 @@ interface ListPageLayoutProps {
 	isLoading: boolean;
 	isFetching: boolean;
 	isError: boolean;
-	handlePageChange?: (page: number) => void;
 }
 
 export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
@@ -22,7 +21,6 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 	isLoading,
 	isFetching,
 	isError,
-	handlePageChange,
 }) => {
 	const [searchParams] = useSearchParams();
 	const urlQuery = searchParams.get("query") || "";
@@ -76,7 +74,6 @@ export const ListPageLayout: React.FC<ListPageLayoutProps> = ({
 					<Pagination
 						totalPages={totalPages}
 						isFetching={isFetching}
-						onPageChange={handlePageChange}
 					/>
 				</div>
 			</div>

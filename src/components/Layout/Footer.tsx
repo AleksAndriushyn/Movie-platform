@@ -1,6 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import useMovieGenres from '@/hooks/useMovieGenres';
+
+const FOOTER_LINK_CLASS = 'text-gray-400 hover:text-white transition duration-150';
 
 const Footer: React.FC = () => {
+  const { data: genres } = useMovieGenres();
+
   return (
     <footer className="bg-gray-950 border-t border-red-800/20 mt-12 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,22 +23,24 @@ const Footer: React.FC = () => {
           <div className="flex space-x-8 text-sm">
             <div className="flex flex-col space-y-2">
               <h4 className="font-semibold text-white mb-1 uppercase">Explore</h4>
-              <a href="/" className="text-gray-400 hover:text-white transition duration-150">Trending</a>
-              <a href="/movies" className="text-gray-400 hover:text-white transition duration-150">Movies</a>
-              <a href="/series" className="text-gray-400 hover:text-white transition duration-150">Series</a>
+              <Link to="/" className={FOOTER_LINK_CLASS}>Popular</Link>
+              {genres?.slice(0, 3).map((genre) => (
+                <Link key={genre.id} to={`/genre/${genre.id}`} className={FOOTER_LINK_CLASS}>
+                  {genre.name}
+                </Link>
+              ))}
             </div>
             
             <div className="flex flex-col space-y-2">
               <h4 className="font-semibold text-white mb-1 uppercase">Info</h4>
-              <a href="/about" className="text-gray-400 hover:text-white transition duration-150">About Us</a>
-              <a href="/contact" className="text-gray-400 hover:text-white transition duration-150">Contact</a>
-              <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition duration-150">API (TMDB)</a>
+              <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className={FOOTER_LINK_CLASS}>TMDB</a>
+              <a href="https://developer.themoviedb.org/docs" target="_blank" rel="noopener noreferrer" className={FOOTER_LINK_CLASS}>API (TMDB)</a>
             </div>
           </div>
         </div>
 
         <div className="pt-6 text-center text-xs text-gray-500">
-          &copy; {new Date().getFullYear()} MovieVerse. All rights reserved. Built using React and Bun.
+          &copy; {new Date().getFullYear()} MovieVerse. All rights reserved. Built with React and Vite.
         </div>
         
       </div>

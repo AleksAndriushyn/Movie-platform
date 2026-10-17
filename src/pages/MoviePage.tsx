@@ -62,7 +62,9 @@ const MoviePage: React.FC = () => {
 
 	const topCast = movie.credits?.cast.filter((member) => member.profile_path) || [];
 
-	const availableVideos = movie?.videos?.results || [];
+	// the trailer modal embeds a YouTube player, so other hosts can't be played
+	const availableVideos =
+		movie.videos?.results.filter((video) => video.site === "YouTube") || [];
 
 	return (
 		<div>

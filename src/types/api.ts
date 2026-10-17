@@ -3,8 +3,8 @@ import type { AxiosRequestConfig } from "axios";
 export interface ApiRequestConfig {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  data?: any; 
-  params?: any;
+  data?: unknown;
+  params?: Record<string, unknown>;
   config?: Omit<AxiosRequestConfig, 'url' | 'method' | 'data' | 'params'>;
 }
 

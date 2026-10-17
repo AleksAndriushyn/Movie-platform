@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
 
 	return (
 		<ListPageLayout
-			title="Trending Now"
+			title="Popular Movies"
 			movies={movies}
 			totalPages={totalPages}
 			isLoading={isLoading}
