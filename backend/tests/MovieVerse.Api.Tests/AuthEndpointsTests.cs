@@ -1,6 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Security.Claims;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +55,34 @@ public sealed class AuthEndpointsTests : IDisposable
         var location = response.Headers.Location!.ToString();
         Assert.StartsWith("https://accounts.google.com/", location);
         Assert.Contains("redirect_uri=https%3A%2F%2Fmovies.example%2Fapi%2Fauth%2Fsignin-google&", location);
+    }
+
+    [Fact]
+    public async Task SignIn_IssuesCookieThatSurvivesBrowserRestart()
+    {
+        // Sign in like the Google handler does: with no IsPersistent flag of its own
+        var client = _factory
+            .WithWebHostBuilder(builder => builder.ConfigureServices(services =>
+                services.AddSingleton<IStartupFilter>(new SignInEndpointFilter())))
+            .CreateClient();
+
+        var response = await client.PostAsync("/test/sign-in", null);
+
+        var cookie = Assert.Single(response.Headers.GetValues("Set-Cookie"), c => c.StartsWith("mv_auth="));
+        // without an expiry the browser drops the cookie when it closes
+        Assert.Contains("expires=", cookie, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private sealed class SignInEndpointFilter : IStartupFilter
+    {
+        public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) => app =>
+        {
+            app.Map("/test/sign-in", signIn => signIn.Run(context => context.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(new ClaimsIdentity([new Claim(AuthClaims.UserId, "1")], "Google")),
+                new AuthenticationProperties())));
+            next(app);
+        };
     }
 
     [Fact]

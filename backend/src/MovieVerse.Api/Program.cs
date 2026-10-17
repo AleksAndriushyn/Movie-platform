@@ -61,6 +61,13 @@ builder.Services
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.ExpireTimeSpan = TimeSpan.FromDays(30);
         options.SlidingExpiration = true;
+        // Google sign-in doesn't mark the session persistent, which would make it a browser-session
+        // cookie that disappears on restart; give every session the 30-day expiry instead
+        options.Events.OnSigningIn = context =>
+        {
+            context.Properties.IsPersistent = true;
+            return Task.CompletedTask;
+        };
         // an API: answer 401/403 instead of redirecting to a login page
         options.Events.OnRedirectToLogin = context =>
         {
