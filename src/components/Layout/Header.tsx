@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Search from '../Search/Search';
 import AuthControls from '../Auth/AuthControls';
+import logo from '@/assets/movieverse-logo.svg';
 
 const Header: React.FC = () => {
   const { data: genres, isLoading: isLoadingGenres } = useMovieGenres();
@@ -11,12 +12,8 @@ const Header: React.FC = () => {
     <header className="main-header">
       <div className="header-container flex justify-between gap-2 items-center h-20">
         <div className="flex items-center md:gap-8">
-          <Link
-            to="/"
-            className="header-logo flex items-center space-x-2 shrink-0"
-          >
-            <span className="text-red-600">Movie</span>
-            <span>Verse</span>
+          <Link to="/" className="flex items-center shrink-0" aria-label="MovieVerse home">
+            <img src={logo} alt="MovieVerse" width={280} height={64} className="h-10 sm:h-12 w-auto" />
           </Link>
 
           <nav className="hidden lg:block">

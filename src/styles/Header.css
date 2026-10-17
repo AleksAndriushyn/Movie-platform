@@ -6,10 +6,6 @@
   @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-.header-logo {
-  @apply text-3xl font-extrabold tracking-wider;
-}
-
 .search-input {
   @apply w-60 sm:w-64 lg:w-48 xl:w-95 p-2 pl-4 text-sm text-gray-200 bg-gray-800 rounded-full border border-gray-700 focus:outline-none
     focus:ring-2 focus:ring-red-600 focus:border-red-600 transition duration-150;
