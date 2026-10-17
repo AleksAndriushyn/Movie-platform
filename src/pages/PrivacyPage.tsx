@@ -42,14 +42,14 @@ const PrivacyPage: React.FC = () => {
 					and <code>profile</code> permissions.
 				</p>
 				<p>
-					We also store what you save: the movies in your favorites and watchlist, with the time you added
-					them.
+					We also store what you save: the movies in your favorites and watchlist and your 1-10 ratings,
+					with the time you added them.
 				</p>
 			</Section>
 
 			<Section title="How we use it">
 				<p>
-					Only to provide the account features: signing you in and showing your lists. We do not sell or
+					Only to provide the account features: signing you in and showing your lists and ratings. We do not sell or
 					share your data, show ads, or build profiles. Our use of information received from Google APIs
 					adheres to the{" "}
 					<ExternalLink href="https://developers.google.com/terms/api-services-user-data-policy">

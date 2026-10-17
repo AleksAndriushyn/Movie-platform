@@ -5,12 +5,16 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import getReleaseYear from "@/utils/release-year";
 import { ListToggleButtons } from "@/components/Lists/ListToggleButtons";
+import { useListMembership } from "@/hooks/useLists";
 type MovieCardProps = {
 	movie: Movie;
 	eagerLoad?: boolean;
 };
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, eagerLoad = false }) => {
+	const { data: membership } = useListMembership();
+	const userRating = membership?.ratings[movie.id] ?? movie.user_rating;
+
 	const posterUrl = getImageUrl(movie.poster_path, "w500");
 	const srcSet = getPosterSrcSet(movie.poster_path);
 
@@ -46,6 +50,12 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, eagerLoad = false }) => {
 						<div className={`movie-card-rating ${ratingColorClass}`}>
 							{rating}
 						</div>
+
+						{userRating && (
+							<div className="movie-card-user-rating" title={`Your rating: ${userRating}/10`}>
+								★ {userRating}
+							</div>
+						)}
 					</div>
 	
 					<div className="p-4 flex flex-col flex-grow">

@@ -61,13 +61,14 @@ public sealed class AuthEndpointsTests : IDisposable
     }
 
     [Fact]
-    public async Task DeleteMe_RemovesUserAndTheirListsOnly()
+    public async Task DeleteMe_RemovesUserAndTheirDataOnly()
     {
         _factory.Tmdb.Respond("movie/550?append_to_response=credits,videos", """{"id":550,"title":"Fight Club","vote_average":8.4}""");
         var alice = await _factory.AddUserAsync("google-alice");
         var bob = await _factory.AddUserAsync("google-bob");
         var aliceClient = _factory.CreateClientFor(alice);
         await aliceClient.PutAsync("/api/me/lists/favorites/550", null);
+        await aliceClient.PutAsJsonAsync("/api/me/ratings/550", new { score = 9 });
         await _factory.CreateClientFor(bob).PutAsync("/api/me/lists/favorites/550", null);
 
         var response = await aliceClient.DeleteAsync("/api/me");
@@ -78,6 +79,7 @@ public sealed class AuthEndpointsTests : IDisposable
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         Assert.False(await db.Users.AnyAsync(u => u.Id == alice.Id));
         Assert.False(await db.ListItems.AnyAsync(i => i.UserId == alice.Id));
+        Assert.False(await db.Ratings.AnyAsync(r => r.UserId == alice.Id));
         Assert.True(await db.ListItems.AnyAsync(i => i.UserId == bob.Id));
     }
 

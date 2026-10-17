@@ -63,6 +63,9 @@ const AuthControls: React.FC = () => {
 					<Link to="/watchlist" className={MENU_ITEM_CLASS}>Watchlist</Link>
 				</MenuItem>
 				<MenuItem>
+					<Link to="/ratings" className={MENU_ITEM_CLASS}>Ratings</Link>
+				</MenuItem>
+				<MenuItem>
 					<button type="button" onClick={() => logout.mutate()} className={MENU_ITEM_CLASS}>
 						Sign out
 					</button>

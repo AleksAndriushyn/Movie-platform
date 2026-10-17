@@ -7,4 +7,12 @@ export interface CurrentUser {
 
 export type MovieListName = 'favorites' | 'watchlist';
 
-export type ListMembership = Record<MovieListName, number[]>;
+/** Everything with its own page under the account menu. */
+export type UserListName = MovieListName | 'ratings';
+
+export interface ListMembership {
+  favorites: number[];
+  watchlist: number[];
+  /** The user's 1-10 score by movie id. */
+  ratings: Record<number, number>;
+}

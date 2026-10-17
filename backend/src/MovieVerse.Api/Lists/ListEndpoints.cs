@@ -11,7 +11,11 @@ namespace MovieVerse.Api.Lists;
 /// <summary>Same shape as TMDB's paginated lists, so the frontend reuses its list pages.</summary>
 public sealed record MoviePage(int Page, IReadOnlyList<MovieSummary> Results, int TotalPages, int TotalResults);
 
-public sealed record ListMembership(IReadOnlyList<int> Favorites, IReadOnlyList<int> Watchlist);
+/// <summary>Movie ids per list, plus the user's score per rated movie id.</summary>
+public sealed record ListMembership(
+    IReadOnlyList<int> Favorites,
+    IReadOnlyList<int> Watchlist,
+    IReadOnlyDictionary<int, byte> Ratings);
 
 public static class ListEndpoints
 {
@@ -31,9 +35,14 @@ public static class ListEndpoints
                 .Select(i => new { i.List, i.MovieId })
                 .ToListAsync(ct);
 
+            var ratings = await db.Ratings
+                .Where(r => r.UserId == userId)
+                .ToDictionaryAsync(r => r.MovieId, r => r.Score, ct);
+
             return new ListMembership(
                 items.Where(i => i.List == MovieList.Favorites).Select(i => i.MovieId).ToList(),
-                items.Where(i => i.List == MovieList.Watchlist).Select(i => i.MovieId).ToList());
+                items.Where(i => i.List == MovieList.Watchlist).Select(i => i.MovieId).ToList(),
+                ratings);
         })
             .WithName("GetListMembership");
 
@@ -104,9 +113,9 @@ public static class ListEndpoints
                 AddedAtUtc = DateTime.UtcNow,
                 Title = movie.Title,
                 PosterPath = movie.PosterPath,
-                ReleaseDate = string.IsNullOrEmpty(movie.ReleaseDate) ? null : movie.ReleaseDate,
+                ReleaseDate = movie.StoredReleaseDate,
                 VoteAverage = movie.VoteAverage,
-                Overview = Truncate(movie.Overview, AppDbContext.MaxOverviewLength),
+                Overview = movie.StoredOverview,
             });
 
             try
@@ -161,7 +170,4 @@ public static class ListEndpoints
         };
         return found;
     }
-
-    private static string? Truncate(string? value, int maxLength) =>
-        value is { Length: > 0 } && value.Length > maxLength ? value[..maxLength] : value;
 }

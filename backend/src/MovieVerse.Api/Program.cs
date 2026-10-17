@@ -149,6 +149,7 @@ app.MapHealthChecks("/health").DisableRateLimiting();
 app.MapMovieEndpoints();
 app.MapAuthEndpoints();
 app.MapListEndpoints();
+app.MapRatingEndpoints();
 
 app.Run();
 

@@ -7,6 +7,8 @@ export interface Movie {
   overview: string;
   release_date: string;
   vote_average: number;
+  /** The signed-in user's own 1-10 score; only on the ratings page. */
+  user_rating?: number;
   backdrop_path: string | null;
   runtime: number | null;
   genres: Genre[];

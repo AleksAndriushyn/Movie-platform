@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addToList, getList, getListMembership, getLoginUrl, ME_KEYS, removeFromList } from '@/api/me';
+import { addToList, getList, getListMembership, getLoginUrl, ME_KEYS, rateMovie, removeFromList, removeRating } from '@/api/me';
 import { TMDB_MAX_PAGES } from '@/api/AxiosInstance';
 import type { MoviesData } from '@/types/movie';
-import type { ListMembership, MovieListName } from '@/types/user';
+import type { ListMembership, MovieListName, UserListName } from '@/types/user';
 import { useCurrentUser } from './useAuth';
 
 export const useListMembership = () => {
@@ -16,7 +16,7 @@ export const useListMembership = () => {
   });
 };
 
-export const useMovieList = (list: MovieListName, page: number, enabled: boolean) => {
+export const useMovieList = (list: UserListName, page: number, enabled: boolean) => {
   return useQuery({
     queryKey: ME_KEYS.list(list, page),
     queryFn: () => getList(list, page),
@@ -31,29 +31,30 @@ export const useMovieList = (list: MovieListName, page: number, enabled: boolean
   });
 };
 
-/** Whether a movie is in a list, and a toggle that updates the UI before the API answers. */
-export const useListToggle = (list: MovieListName, movieId: number) => {
+const redirectToLogin = () =>
+  window.location.assign(getLoginUrl(window.location.pathname + window.location.search));
+
+/**
+ * Applies a change to the cached membership right away and rolls it back if the API fails,
+ * so toggles and stars react instantly.
+ */
+const useOptimisticMembership = <TVariables>(
+  mutationFn: (variables: TVariables) => Promise<void>,
+  apply: (membership: ListMembership, variables: TVariables) => ListMembership
+) => {
   const queryClient = useQueryClient();
-  const { data: user } = useCurrentUser();
-  const { data: membership } = useListMembership();
 
-  const isInList = membership?.[list].includes(movieId) ?? false;
-
-  const mutation = useMutation({
-    mutationFn: (add: boolean) => (add ? addToList(list, movieId) : removeFromList(list, movieId)),
-    onMutate: async (add) => {
+  return useMutation({
+    mutationFn,
+    onMutate: async (variables: TVariables) => {
       await queryClient.cancelQueries({ queryKey: ME_KEYS.membership });
       const previous = queryClient.getQueryData<ListMembership>(ME_KEYS.membership);
       if (previous) {
-        const ids = previous[list].filter((id) => id !== movieId);
-        queryClient.setQueryData<ListMembership>(ME_KEYS.membership, {
-          ...previous,
-          [list]: add ? [movieId, ...ids] : ids,
-        });
+        queryClient.setQueryData<ListMembership>(ME_KEYS.membership, apply(previous, variables));
       }
       return { previous };
     },
-    onError: (_error, _add, context) => {
+    onError: (_error, _variables, context) => {
       if (context?.previous) {
         queryClient.setQueryData(ME_KEYS.membership, context.previous);
       }
@@ -62,14 +63,61 @@ export const useListToggle = (list: MovieListName, movieId: number) => {
       queryClient.invalidateQueries({ queryKey: ME_KEYS.membership });
     },
   });
+};
+
+/** Whether a movie is in a list, and a toggle that updates the UI before the API answers. */
+export const useListToggle = (list: MovieListName, movieId: number) => {
+  const { data: user } = useCurrentUser();
+  const { data: membership } = useListMembership();
+
+  const isInList = membership?.[list].includes(movieId) ?? false;
+
+  const mutation = useOptimisticMembership(
+    (add: boolean) => (add ? addToList(list, movieId) : removeFromList(list, movieId)),
+    (previous, add) => {
+      const ids = previous[list].filter((id) => id !== movieId);
+      return { ...previous, [list]: add ? [movieId, ...ids] : ids };
+    }
+  );
 
   const toggle = () => {
     if (!user) {
-      window.location.assign(getLoginUrl(window.location.pathname + window.location.search));
+      redirectToLogin();
       return;
     }
     mutation.mutate(!isInList);
   };
 
   return { isInList, toggle, isPending: mutation.isPending };
+};
+
+/** The user's score for a movie; null clears it. */
+export const useMovieRating = (movieId: number) => {
+  const { data: user } = useCurrentUser();
+  const { data: membership } = useListMembership();
+
+  const rating: number | null = membership?.ratings[movieId] ?? null;
+
+  const mutation = useOptimisticMembership(
+    (score: number | null) => (score === null ? removeRating(movieId) : rateMovie(movieId, score)),
+    (previous, score) => {
+      const ratings = { ...previous.ratings };
+      if (score === null) {
+        delete ratings[movieId];
+      } else {
+        ratings[movieId] = score;
+      }
+      return { ...previous, ratings };
+    }
+  );
+
+  const setRating = (score: number | null) => {
+    if (!user) {
+      redirectToLogin();
+      return;
+    }
+    mutation.mutate(score);
+  };
+
+  return { rating, setRating, isPending: mutation.isPending };
 };
