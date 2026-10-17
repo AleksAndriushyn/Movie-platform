@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Hybrid;
 using MovieVerse.Api.Tmdb;
 
@@ -24,6 +25,14 @@ public sealed class MovieCatalog(TmdbClient tmdb, HybridCache cache)
             new() { ["append_to_response"] = "credits,videos" },
             DetailsTtl,
             ct);
+
+    /// <summary>The card fields of a movie, read from the cached details response.</summary>
+    public async Task<MovieSummary> GetSummaryAsync(int movieId, CancellationToken ct)
+    {
+        var json = await GetDetailsAsync(movieId, ct);
+        return JsonSerializer.Deserialize<MovieSummary>(json, TmdbJson.Options)
+            ?? throw new InvalidOperationException($"TMDB returned empty details for movie {movieId}.");
+    }
 
     public ValueTask<string> SearchAsync(string query, int page, CancellationToken ct) =>
         GetCachedAsync(
