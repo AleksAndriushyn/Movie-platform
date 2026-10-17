@@ -1,24 +1,21 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite';
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+// MovieVerse API (backend/src/MovieVerse.Api), see backend/README.md
+const API_DEV_URL = process.env.API_DEV_URL ?? 'http://localhost:5080';
 
-  const VERCEL_ACCESS_TOKEN = env.TMDB_API_ACCESS_TOKEN;
-
-  return {
-    plugins: [react(), tailwindcss()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, 'src'),
-      },
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
     },
-    define: {
-      'import.meta.env.VITE_TMDB_API_ACCESS_TOKEN':
-        JSON.stringify(VERCEL_ACCESS_TOKEN),
+  },
+  server: {
+    proxy: {
+      '/api': API_DEV_URL,
     },
-  };
-  }
-);
+  },
+});

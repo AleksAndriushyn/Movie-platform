@@ -1,8 +1,9 @@
 import axios from "axios";
 import type { ApiRequestConfig } from "@/types/api";
 
-const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_API_ACCESS_TOKEN;
-const API_BASE_URL = 'https://api.themoviedb.org/3';
+// Same-origin MovieVerse API: Vite proxies /api in dev, Vercel rewrites it in production.
+// The TMDB token lives only on the server.
+const API_BASE_URL = '/api';
 
 export const TMDB_MAX_PAGES = 500;
 
@@ -18,9 +19,6 @@ export class ApiError extends Error {
 
 const apiInstance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    Authorization: `Bearer ${API_ACCESS_TOKEN}`,
-  },
 });
 
 export const apiClient = async <T>({
@@ -42,8 +40,10 @@ export const apiClient = async <T>({
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
+      // the API answers errors with ProblemDetails
+      const problem = error.response.data;
       throw new ApiError(
-        error.response.data?.status_message || error.message,
+        problem?.detail || problem?.title || error.message,
         error.response.status
       );
     }

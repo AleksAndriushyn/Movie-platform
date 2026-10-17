@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:api": "dotnet run --project backend/src/MovieVerse.Api",
+    "dev:all": "concurrently -n api,web -c blue,magenta \"npm:dev:api\" \"npm:dev\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "build": "tsc -b && vite build"
