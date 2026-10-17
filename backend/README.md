@@ -41,7 +41,7 @@ The Vite dev server proxies `/api` to the API. Run the tests with `dotnet test b
 4. In the GitHub repository, add the secret `AZURE_WEBAPP_PUBLISH_PROFILE` (the publish profile file's contents)
    and the variable `AZURE_WEBAPP_NAME` (the app name). The `Backend` workflow deploys every push to `main`
    that touches `backend/`; run it manually the first time.
-5. Point the frontend at the API: in `vercel.json`, add a rewrite from `/api/:path*` to
-   `https://<default domain>/api/:path*` above the SPA fallback.
+5. Point the frontend at the API: the `/api/:path*` rewrite in `vercel.json` forwards to the app's
+   default domain (currently `movieverse-api-c0e3fe.azurewebsites.net`).
 
 The Free tier sleeps when idle, so the first request after a pause takes a few seconds.
