@@ -35,5 +35,9 @@ public static class UserProvisioning
         await db.SaveChangesAsync(ct);
 
         identity.AddClaim(new Claim(AuthClaims.UserId, user.Id.ToString(CultureInfo.InvariantCulture)));
+        if (user.IsAdmin)
+        {
+            identity.AddClaim(new Claim(AuthClaims.Admin, "true"));
+        }
     }
 }

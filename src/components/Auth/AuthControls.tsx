@@ -65,6 +65,11 @@ const AuthControls: React.FC = () => {
 				<MenuItem>
 					<Link to="/ratings" className={MENU_ITEM_CLASS}>Ratings</Link>
 				</MenuItem>
+				{user.isAdmin && (
+					<MenuItem>
+						<Link to="/admin/reviews" className={MENU_ITEM_CLASS}>Moderation</Link>
+					</MenuItem>
+				)}
 				<MenuItem>
 					<button type="button" onClick={() => logout.mutate()} className={MENU_ITEM_CLASS}>
 						Sign out

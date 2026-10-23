@@ -1,4 +1,6 @@
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,11 +12,15 @@ using MovieVerse.Api.Data;
 using MovieVerse.Api.Infrastructure;
 using MovieVerse.Api.Lists;
 using MovieVerse.Api.Movies;
+using MovieVerse.Api.Reviews;
 using MovieVerse.Api.Tmdb;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+// enums as "visible" / "spam" rather than numbers
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)));
 builder.Services.AddProblemDetails();
 builder.Services.AddValidation();
 builder.Services.AddExceptionHandler<UpstreamExceptionHandler>();
@@ -157,6 +163,8 @@ app.MapMovieEndpoints();
 app.MapAuthEndpoints();
 app.MapListEndpoints();
 app.MapRatingEndpoints();
+app.MapReviewEndpoints();
+app.MapModerationEndpoints();
 
 app.Run();
 

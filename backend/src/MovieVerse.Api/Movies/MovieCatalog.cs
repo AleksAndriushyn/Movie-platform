@@ -34,6 +34,14 @@ public sealed class MovieCatalog(TmdbClient tmdb, HybridCache cache)
             ?? throw new InvalidOperationException($"TMDB returned empty details for movie {movieId}.");
     }
 
+    public ValueTask<string> GetTmdbReviewsAsync(int movieId, int page, CancellationToken ct) =>
+        GetCachedAsync(
+            $"reviews:{movieId}:{page}",
+            $"movie/{movieId}/reviews",
+            new() { ["page"] = page.ToString() },
+            DetailsTtl,
+            ct);
+
     public ValueTask<string> SearchAsync(string query, int page, CancellationToken ct) =>
         GetCachedAsync(
             // TMDB search is case-insensitive, so share cache entries across casing

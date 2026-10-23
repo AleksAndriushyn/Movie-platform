@@ -3,6 +3,8 @@ export interface CurrentUser {
   name: string | null;
   email: string | null;
   avatarUrl: string | null;
+  /** Shows the moderation link; the API checks admin rights itself. */
+  isAdmin: boolean;
 }
 
 export type MovieListName = 'favorites' | 'watchlist';

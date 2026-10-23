@@ -7,7 +7,7 @@ using MovieVerse.Api.Data;
 
 namespace MovieVerse.Api.Auth;
 
-public sealed record CurrentUser(int Id, string? Name, string? Email, string? AvatarUrl);
+public sealed record CurrentUser(int Id, string? Name, string? Email, string? AvatarUrl, bool IsAdmin);
 
 public static class AuthEndpoints
 {
@@ -33,7 +33,8 @@ public static class AuthEndpoints
                 user.GetUserId(),
                 user.FindFirstValue(ClaimTypes.Name),
                 user.FindFirstValue(ClaimTypes.Email),
-                user.FindFirstValue(AuthClaims.Picture)))
+                user.FindFirstValue(AuthClaims.Picture),
+                user.HasClaim(AuthClaims.Admin, "true")))
             .RequireAuthorization()
             .WithTags("Auth")
             .WithName("GetCurrentUser");
@@ -42,7 +43,15 @@ public static class AuthEndpoints
         app.MapDelete("/api/me", async (HttpContext http, ClaimsPrincipal user, AppDbContext db, CancellationToken ct) =>
         {
             var userId = user.GetUserId();
-            await db.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(ct);
+            // Reports the user filed don't cascade (see AppDbContext), so delete them in the same transaction;
+            // the execution strategy retries the whole unit while the serverless database wakes up
+            await db.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+            {
+                await using var transaction = await db.Database.BeginTransactionAsync(ct);
+                await db.ReviewReports.Where(r => r.ReporterUserId == userId).ExecuteDeleteAsync(ct);
+                await db.Users.Where(u => u.Id == userId).ExecuteDeleteAsync(ct);
+                await transaction.CommitAsync(ct);
+            });
             await http.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Results.NoContent();
         })

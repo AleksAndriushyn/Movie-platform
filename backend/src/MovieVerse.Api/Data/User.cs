@@ -16,4 +16,7 @@ public sealed class User
     public DateTime CreatedAtUtc { get; set; }
 
     public DateTime LastLoginAtUtc { get; set; }
+
+    /// <summary>Can moderate reviews. Set directly in the database.</summary>
+    public bool IsAdmin { get; set; }
 }

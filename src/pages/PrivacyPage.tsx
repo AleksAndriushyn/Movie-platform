@@ -1,6 +1,6 @@
 import React from "react";
 
-const LAST_UPDATED = "October 18, 2026";
+const LAST_UPDATED = "October 23, 2026";
 const ISSUES_URL = "https://github.com/AleksAndriushyn/Movie-platform/issues";
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -42,14 +42,27 @@ const PrivacyPage: React.FC = () => {
 					and <code>profile</code> permissions.
 				</p>
 				<p>
-					We also store what you save: the movies in your favorites and watchlist and your 1-10 ratings,
-					with the time you added them.
+					We also store what you save: the movies in your favorites and watchlist, your 1-10 ratings and your
+					reviews, with the time you added them. If you report a review, we store the report and its reason.
+				</p>
+			</Section>
+
+			<Section title="Reviews are public">
+				<p>
+					Reviews you write are visible to everyone, together with your Google name, profile picture and your
+					rating of that movie. Your email address is never shown publicly.
+				</p>
+				<p>
+					Other users can report a review. A review reported by three people is hidden until a moderator
+					looks at it; moderators can see the author's email address and can restore or remove the review.
+					Reports are anonymous to the review's author.
 				</p>
 			</Section>
 
 			<Section title="How we use it">
 				<p>
-					Only to provide the account features: signing you in and showing your lists and ratings. We do not sell or
+					Only to provide the account features: signing you in, showing your lists and ratings, publishing your
+					reviews and keeping them free of spam and abuse. We do not sell or
 					share your data, show ads, or build profiles. Our use of information received from Google APIs
 					adheres to the{" "}
 					<ExternalLink href="https://developers.google.com/terms/api-services-user-data-policy">
