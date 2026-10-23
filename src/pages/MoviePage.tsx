@@ -13,6 +13,7 @@ import getReleaseYear from "@/utils/release-year";
 import NotFoundPage from "./NotFoundPage";
 import { ListToggleButtons } from "@/components/Lists/ListToggleButtons";
 import { RatingStars } from "@/components/Ratings/RatingStars";
+import { ReviewsSection } from "@/components/Reviews/ReviewsSection";
 
 const MoviePage: React.FC = () => {
 	const { movieId } = useParams<{ movieId: string }>();
@@ -183,6 +184,8 @@ const MoviePage: React.FC = () => {
 				<h2 className="text-3xl font-bold mb-6">Cast</h2>
 				{<CastCarousel cast={topCast} />}
 			</div>
+
+			<ReviewsSection movieId={movie.id} />
 
 			<TrailerModal
 				isOpen={isModalOpen}

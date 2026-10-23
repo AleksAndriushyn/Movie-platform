@@ -8,6 +8,7 @@ import GenrePage from "./pages/GenrePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ListPage from "./pages/ListPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import ModerationPage from "./pages/ModerationPage";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { ApiError } from "./api/AxiosInstance";
 
@@ -48,6 +49,7 @@ const App: React.FC = () => {
 						path="/ratings"
 						element={<ListPage list="ratings" title="Your Ratings" emptyMessage="You haven't rated any movies yet. Open a movie and pick from 1 to 10 stars." />}
 					/>
+					<Route path="/admin/reviews" element={<ModerationPage />} />
 					<Route path="/privacy" element={<PrivacyPage />} />
 					<Route path="*" element={<NotFoundPage />} />
 				</Routes>
