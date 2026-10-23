@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MovieVerse.Api.Data;
 
@@ -11,6 +12,21 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     public DbSet<ListItem> ListItems => Set<ListItem>();
 
     public DbSet<Rating> Ratings => Set<Rating>();
+
+    public DbSet<Review> Reviews => Set<Review>();
+
+    public DbSet<ReviewReport> ReviewReports => Set<ReviewReport>();
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // Times are stored in UTC; mark them as such on read, or JSON serializes them without "Z"
+        // and browsers read them as local time
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+    }
+
+    private sealed class UtcDateTimeConverter() : ValueConverter<DateTime, DateTime>(
+        value => value,
+        value => DateTime.SpecifyKind(value, DateTimeKind.Utc));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +61,25 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             rating.Property(r => r.PosterPath).HasMaxLength(200);
             rating.Property(r => r.ReleaseDate).HasMaxLength(10);
             rating.Property(r => r.Overview).HasMaxLength(MaxOverviewLength);
+        });
+
+        modelBuilder.Entity<Review>(review =>
+        {
+            review.HasIndex(r => new { r.UserId, r.MovieId }).IsUnique();
+            review.HasIndex(r => new { r.MovieId, r.Status, r.CreatedAtUtc });
+            review.HasIndex(r => r.Status);
+            review.HasOne(r => r.User).WithMany().HasForeignKey(r => r.UserId).OnDelete(DeleteBehavior.Cascade);
+            review.Property(r => r.Body).HasMaxLength(Review.MaxBodyLength);
+        });
+
+        modelBuilder.Entity<ReviewReport>(report =>
+        {
+            report.HasKey(r => new { r.ReviewId, r.ReporterUserId });
+            report.HasOne<Review>().WithMany(r => r.Reports).HasForeignKey(r => r.ReviewId).OnDelete(DeleteBehavior.Cascade);
+            // SQL Server rejects a second cascade path from Users (via Reviews and directly),
+            // so a reporter's reports are deleted explicitly when the account is deleted
+            report.HasOne<User>().WithMany().HasForeignKey(r => r.ReporterUserId).OnDelete(DeleteBehavior.NoAction);
+            report.HasIndex(r => r.ReporterUserId);
         });
     }
 }

@@ -37,6 +37,15 @@ public static class MovieEndpoints
             Json(http, await catalog.GetDetailsAsync(movieId, ct), MovieCatalog.DetailsTtl))
             .WithName("GetMovie");
 
+        movies.MapGet("/{movieId:int}/tmdb-reviews", async (
+                HttpContext http,
+                MovieCatalog catalog,
+                [Range(1, int.MaxValue)] int movieId,
+                [Range(1, MaxPage)] int page = 1,
+                CancellationToken ct = default) =>
+            Json(http, await catalog.GetTmdbReviewsAsync(movieId, page, ct), MovieCatalog.DetailsTtl))
+            .WithName("GetTmdbReviews");
+
         var genres = app.MapGroup("/api/genres").WithTags("Genres");
 
         genres.MapGet("/", async (HttpContext http, MovieCatalog catalog, CancellationToken ct = default) =>

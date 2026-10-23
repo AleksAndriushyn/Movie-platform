@@ -10,6 +10,9 @@ public static class AuthClaims
 
     public const string Picture = "picture";
 
+    /// <summary>Shows moderation UI; admin endpoints re-check the database.</summary>
+    public const string Admin = "mv:admin";
+
     public static int GetUserId(this ClaimsPrincipal user) =>
         int.Parse(user.FindFirstValue(UserId)
             ?? throw new InvalidOperationException("Authenticated user has no user id claim."),
